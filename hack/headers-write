@@ -1,5 +1,6 @@
+#!/usr/bin/env bash
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
-#         Apache 2.0 License Copyright (c) 2022-2023 The Aurae Authors         #
+#            Apache 2.0 License Copyright (c) 2022 The Aurae Authors           #
 #                                                                              #
 #                ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓                #
 #                ┃  █████╗ ██╗   ██╗██████╗  █████╗ ███████╗  ┃                #
@@ -28,45 +29,27 @@
 #                                                                              #
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
 
-default: submodule aurae auraed
-all: default install
+# Define scripts
+read -r -d '' EXPECTEDSCRIPTS cat $(.header.script)
 
-submodule: ## Initialize all submodules
-	@echo "Initializing submodules"
-	@git submodule update --init --recursive
+STATUS=0
+FILESSCRIPTS=$(find . -name "*.sh" -not -path "./vendor/*")
+FILESSOURCE=$(find .  -name "*.rs" -not -path "./vendor/*")
 
-.PHONY: aurae
-aurae: ## Initialize and compile aurae
-	cd aurae && make
-	cp -v aurae/target/release/aurae bin
+for FILE in $FILESCRIPTS; do
 
+    # Bypass files here
+    if [ "$FILE" == "ignore.me" ]; then
+        continue
+    fi
 
-.PHONY: auraed
-auraed: ## Initialize and compile auraed
-	cd auraed && make
-	cp -v auraed/target/release/auraed bin
+    # Replace the actual year with DATE so we can ignore the year when checking for the license header.
+    HEADER=$(head -n 13 $FILE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
+    if [ "$HEADER" != "$EXPECTEDSCRIPTS" ]; then
+      echo "incorrect license header: $FILE"
+      STATUS=1
+    fi
 
-install: ## Install (copy) to /bin
-	chmod +x bin/*
-	sudo -E cp -v bin/* /bin
+done
 
-.PHONY: clean
-clean:
-	cd aurae && make clean
-	cd auraed && make clean
-	@rm -rvf bin/*
-
-headers: ## Update the headers for all submodules
-
-
-headers-check: ## Update the headers for all submodules
-	./hack/headers-check
-
-update-headers: ## Update the headers in the repository. Required for all new files.
-	./hack/headers-validate
-
-.PHONY: help
-help:  ## 🤔 Show help messages for make targets
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}'
-
-
+exit $STATUS
