@@ -49,9 +49,8 @@ echo " [ Formatting Source Code ] "
 echo ""
 
 ## Rust
-rustfmt --edition=2021 -v ${RUSTSOURCES}
+rustfmt --edition=2021 ${RUSTSOURCES}
 
 ## Protobuf
-clang-format -i ./aurae/proto/*.proto
 clang-format -i ./auraed/proto/*.proto
 
