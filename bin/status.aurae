@@ -35,3 +35,5 @@ print("Aurae. A distribtued runtime. Written by Kris Nóva. <kris@nivenly.com>")
 print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 print("");
 
+status();
+
