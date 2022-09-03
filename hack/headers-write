@@ -31,13 +31,13 @@
 
 # This script assumes running from the top level directory within a Makefile
 
-. hack/headers-files-to-check
+. hack/file-definitions
+
+### Write Scripts
 
 echo ""
 echo ""
 echo " [ Updating Scripts ] ==========================================================================================="
-
-### Write Scripts
 for FILE in $SCRIPTS; do
 
     # Bypass files here
@@ -47,37 +47,38 @@ for FILE in $SCRIPTS; do
 
     # Replace the actual year with DATE so we can ignore the year when checking for the license header.
     CONTENT=$(head -n 30 $FILE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
-    if [ "$CONTENT" != "$EXPECTED" ]; then
+    if [ "$CONTENT" != "$EXPECTEDSCRIPT" ]; then
       # Replace DATE with the current year.
-      EXPECTED=$(echo "$EXPECTED" | sed -E -e "s/Copyright © DATE/Copyright © $(date +%Y)/")
-		  echo -e "$EXPECTED\n\n$(cat $FILE)" > $FILE
+      EXPECTEDSCRIPT=$(echo "$EXPECTEDSCRIPT" | sed -E -e "s/Copyright © DATE/Copyright © $(date +%Y)/")
+		  echo -e "$EXPECTEDSCRIPT\n\n$(cat $FILE)" > $FILE
       echo "  -> [MUTATING SOURCE FILE] Writing header: $FILE"
     fi
 
 done
 
+### Write Source Files (.rs, .go, .c, etc)
 echo " [ Updating Source Code ] ======================================================================================="
-
-### Write Sources
-for FILE in $SOUCRES; do
+for FILE in $SOURCES; do
 
     # Bypass files here
     if [ "$FILE" == "ignore.me" ]; then
       continue
     fi
 
+    echo "$FILE"
+
     # Replace the actual year with DATE so we can ignore the year when checking for the license header.
     CONTENT=$(head -n 30 $FILE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
-    if [ "$CONTENT" != "$EXPECTED" ]; then
+    if [ "$CONTENT" != "$EXPECTEDSOURCE" ]; then
       # Replace DATE with the current year.
-      EXPECTED=$(echo "$EXPECTED" | sed -E -e "s/Copyright © DATE/Copyright © $(date +%Y)/")
-		  echo -e "$EXPECTED\n\n$(cat $FILE)" > $FILE
+      EXPECTEDSOURCE=$(echo "$EXPECTEDSOURCE" | sed -E -e "s/Copyright © DATE/Copyright © $(date +%Y)/")
+		  echo -e "$EXPECTEDSOURCE\n\n$(cat $FILE)" > $FILE
       echo "  -> [MUTATING SOURCE FILE] Writing header: $FILE"
     fi
 
 done
 
-echo " [ Writes Complete] ============================================================================================="
+echo " [ Write Complete] =============================================================================================="
 echo ""
 echo ""
 

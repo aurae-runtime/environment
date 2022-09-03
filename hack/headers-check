@@ -31,14 +31,13 @@
 
 # This script assumes running from the top level directory within a Makefile
 
-. hack/headers-files-to-check
+. hack/file-definitions
 
 status=0
 
 echo ""
 echo ""
 echo " [ Checking Scripts ] ==========================================================================================="
-
 
 ### Check Scripts
 for SCRIPT in $SCRIPTS; do
@@ -67,7 +66,7 @@ for SOURCE in $SOURCES; do
     fi
 
     # Replace the actual year with DATE so we can ignore the year when checking for the license header.
-    HEADER=$(head -n 30 $SOURCE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
+    #HEADER=$(head -n 30 $SOURCE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
     if [ "$HEADER" != "$EXPECTEDSOURCE" ]; then
       echo "  -> [FAILED SOURCE FILE] Invalid header: $SOURCE"
       STATUS=1

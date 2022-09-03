@@ -48,3 +48,8 @@ SOURCES=$(find . \( \
   -iname '*.c' -or \
   -iname '*.h' \
     \) -not -path '*/ignore/*')
+
+### Rust Sources
+RUSTSOURCES=$(find . \( \
+  -iname '*.rs' \
+    \) -not -path '*/ignore/*')
