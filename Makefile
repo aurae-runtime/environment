@@ -68,16 +68,16 @@ submodule: ## Initialize all submodules
 .PHONY: aurae
 aurae: ## Initialize and compile aurae
 	cd aurae && make
-	cp -v aurae/target/release/aurae bin
+	cp -v aurae/target/release/aurae target
 
 .PHONY: auraed
 auraed: ## Initialize and compile auraed
 	cd auraed && make
-	cp -v auraed/target/release/auraed bin
+	cp -v auraed/target/release/auraed target
 
 install: ## Install (copy) to /bin
 	chmod +x bin/*
-	sudo -E cp -v bin/* /bin
+	sudo -E cp -v target/* /bin
 
 fmt: headers ## Format the entire code base(s)
 	@./hack/code-format
