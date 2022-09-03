@@ -49,8 +49,7 @@ EXPECTEDSOURCE=$(cat hack/.header.source)
 ### Define Scripts
 SCRIPTS=$(find . \( \
   -iname '*.sh' -or \
-  -iname '*.toml' -or \
-  -iname 'Makefile' \
+  -iname '*.toml' \
     \) -not -path '*/ignore/*')
 
 ### Define Sources
