@@ -29,6 +29,18 @@
 #                                                                              #
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
 
+D=$(pwd)
+if [[ $D == *"hack"* ]]; then
+  echo ""
+  echo "/hack is a special directory. These scripts should only be executed from the Makefile."
+  echo "..or the directory above this one."
+  echo ""
+  echo "We suggest using the github.com/aurae-runtime/environment repository for building aurae"
+  echo "projects from source."
+  echo ""
+  exit 99
+fi
+
 # This script assumes running from the top level directory within a Makefile
 
 . hack/file-definitions
@@ -36,8 +48,8 @@
 ### Write Scripts
 
 echo ""
+echo " [ Checking Scripts ] "
 echo ""
-echo " [ Updating Scripts ] ==========================================================================================="
 for FILE in $SCRIPTS; do
 
     # Bypass files here
@@ -57,15 +69,14 @@ for FILE in $SCRIPTS; do
 done
 
 ### Write Source Files (.rs, .go, .c, etc)
-echo " [ Updating Source Code ] ======================================================================================="
+echo " [ Checking Source Code ] "
+echo ""
 for FILE in $SOURCES; do
 
     # Bypass files here
     if [ "$FILE" == "ignore.me" ]; then
       continue
     fi
-
-    echo "$FILE"
 
     # Replace the actual year with DATE so we can ignore the year when checking for the license header.
     CONTENT=$(head -n 30 $FILE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
@@ -78,9 +89,7 @@ for FILE in $SOURCES; do
 
 done
 
-echo " [ Write Complete] =============================================================================================="
-echo ""
-echo ""
+echo " [ Write Complete] "
 
 echo $status
 

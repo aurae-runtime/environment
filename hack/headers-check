@@ -29,17 +29,28 @@
 #                                                                              #
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
 
+D=$(pwd)
+if [[ $D == *"hack"* ]]; then
+  echo ""
+  echo "/hack is a special directory. These scripts should only be executed from the Makefile."
+  echo "..or the directory above this one."
+  echo ""
+  echo "We suggest using the github.com/aurae-runtime/environment repository for building aurae"
+  echo "projects from source."
+  echo ""
+  exit 99
+fi
+
 # This script assumes running from the top level directory within a Makefile
 
 . hack/file-definitions
 
 status=0
 
-echo ""
-echo ""
-echo " [ Checking Scripts ] ==========================================================================================="
-
 ### Check Scripts
+echo ""
+echo " [ Checking Scripts ] "
+echo ""
 for SCRIPT in $SCRIPTS; do
     # Bypass files here
     if [ "$SCRIPT" == "ignore.me" ]; then
@@ -54,10 +65,9 @@ for SCRIPT in $SCRIPTS; do
     fi
 done
 
-echo " [ Checking Source Code ] ======================================================================================="
-
-
 ### Check Source Files
+echo " [ Checking Source Code ] "
+echo ""
 for SOURCE in $SOURCES; do
 
     # Bypass files here
@@ -74,8 +84,6 @@ for SOURCE in $SOURCES; do
 
 done
 
-echo " [ Checks Complete ] ============================================================================================"
-echo ""
-echo ""
+echo " [ Checks Complete ] "
 
 exit $STATUS
