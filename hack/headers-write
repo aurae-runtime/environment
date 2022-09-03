@@ -62,7 +62,7 @@ for FILE in $SCRIPTS; do
     if [ "$CONTENT" != "$EXPECTEDSCRIPT" ]; then
       # Replace DATE with the current year.
       EXPECTEDSCRIPT=$(echo "$EXPECTEDSCRIPT" | sed -E -e "s/Copyright © DATE/Copyright © $(date +%Y)/")
-      SRC=echo "$(cat input.txt)"
+      SRC="$(cat $FILE)"
 		  echo -e "$EXPECTEDSCRIPT\n\n$SRC" > $FILE
       echo "  -> [MUTATING SOURCE FILE] Writing header: $FILE"
     fi
@@ -84,7 +84,7 @@ for FILE in $SOURCES; do
     if [ "$CONTENT" != "$EXPECTEDSOURCE" ]; then
       # Replace DATE with the current year.
       EXPECTEDSOURCE=$(echo "$EXPECTEDSOURCE" | sed -E -e "s/Copyright © DATE/Copyright © $(date +%Y)/")
-      SRC=echo "$(cat input.txt)"
+      SRC="$(cat $FILE)"
 		  echo -e "$EXPECTEDSOURCE\n\n$SRC" > $FILE
       echo "  -> [MUTATING SOURCE FILE] Writing header: $FILE"
     fi
