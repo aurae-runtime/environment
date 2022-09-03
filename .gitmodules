@@ -1,6 +1,8 @@
 [submodule "aurae"]
 	path = aurae
 	url = git@github.com:aurae-runtime/aurae
+	branch = main
 [submodule "auraed"]
 	path = auraed
 	url = git@github.com:aurae-runtime/auraed
+	branch = main
