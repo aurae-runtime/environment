@@ -127,7 +127,7 @@ fmt: headers ## Format the entire code base(s)
 clean:
 	cd aurae && make clean
 	cd auraed && make clean
-	@rm -rvf bin/*
+	@rm -rvf target/*
 
 headers: headers-write ## Fix headers. Run this if you want to clobber things.
 
