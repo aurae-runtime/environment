@@ -17,7 +17,7 @@
 #                                                                              #
 #   Licensed under the Apache License, Version 2.0 (the "License");            #
 #   you may not use this file except in compliance with the License.           #
-#   You may obtain a copy of the License at                                    #
+#   You may obtain headers-check copy of the License at                                    #
 #                                                                              #
 #       http://www.apache.org/licenses/LICENSE-2.0                             #
 #                                                                              #
@@ -30,7 +30,7 @@
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
 
 # Define scripts
-read -r -d '' EXPECTEDSCRIPTS cat $(.header.script)
+EXPECTEDSCRIPTS=$(cat .header.script)
 
 STATUS=0
 FILESSCRIPTS=$(find . -name "*.sh" -not -path "./vendor/*")
@@ -44,10 +44,11 @@ for FILE in $FILESCRIPTS; do
     fi
 
     # Replace the actual year with DATE so we can ignore the year when checking for the license header.
-    HEADER=$(head -n 13 $FILE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
-    if [ "$HEADER" != "$EXPECTEDSCRIPTS" ]; then
-      echo "incorrect license header: $FILE"
-      STATUS=1
+    CONTENT=$(head -n 13 $FILE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
+    if [ "$CONTENT" != "$EXPECTED" ]; then
+      # Replace DATE with the current year.
+      EXPECTED=$(echo "$EXPECTED" | sed -E -e "s/Copyright © DATE/Copyright © $(date +%Y)/")
+		  echo -e "$EXPECTED\n\n$(cat $FILE)" > $FILE
     fi
 
 done
