@@ -17,7 +17,7 @@
 #                                                                              #
 #   Licensed under the Apache License, Version 2.0 (the "License");            #
 #   you may not use this file except in compliance with the License.           #
-#   You may obtain headers-check copy of the License at                                    #
+#   You may obtain headers-check copy of the License at                        #
 #                                                                              #
 #       http://www.apache.org/licenses/LICENSE-2.0                             #
 #                                                                              #
@@ -29,14 +29,16 @@
 #                                                                              #
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
 
-# Define scripts
-EXPECTEDSCRIPTS=$(cat .header.script)
+# This script assumes running from the top level directory within a Makefile
 
-STATUS=0
-FILESSCRIPTS=$(find . -name "*.sh" -not -path "./vendor/*")
-FILESSOURCE=$(find .  -name "*.rs" -not -path "./vendor/*")
+. hack/headers-files-to-check
 
-for FILE in $FILESCRIPTS; do
+echo ""
+echo ""
+echo " [ Updating Scripts ] ==========================================================================================="
+
+### Write Scripts
+for FILE in $SCRIPTS; do
 
     # Bypass files here
     if [ "$FILE" == "ignore.me" ]; then
@@ -44,13 +46,40 @@ for FILE in $FILESCRIPTS; do
     fi
 
     # Replace the actual year with DATE so we can ignore the year when checking for the license header.
-    CONTENT=$(head -n 13 $FILE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
+    CONTENT=$(head -n 30 $FILE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
     if [ "$CONTENT" != "$EXPECTED" ]; then
       # Replace DATE with the current year.
       EXPECTED=$(echo "$EXPECTED" | sed -E -e "s/Copyright © DATE/Copyright © $(date +%Y)/")
 		  echo -e "$EXPECTED\n\n$(cat $FILE)" > $FILE
+      echo "  -> [MUTATING SOURCE FILE] Writing header: $FILE"
     fi
 
 done
 
-exit $STATUS
+echo " [ Updating Source Code ] ======================================================================================="
+
+### Write Sources
+for FILE in $SOUCRES; do
+
+    # Bypass files here
+    if [ "$FILE" == "ignore.me" ]; then
+      continue
+    fi
+
+    # Replace the actual year with DATE so we can ignore the year when checking for the license header.
+    CONTENT=$(head -n 30 $FILE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
+    if [ "$CONTENT" != "$EXPECTED" ]; then
+      # Replace DATE with the current year.
+      EXPECTED=$(echo "$EXPECTED" | sed -E -e "s/Copyright © DATE/Copyright © $(date +%Y)/")
+		  echo -e "$EXPECTED\n\n$(cat $FILE)" > $FILE
+      echo "  -> [MUTATING SOURCE FILE] Writing header: $FILE"
+    fi
+
+done
+
+echo " [ Writes Complete] ============================================================================================="
+echo ""
+echo ""
+
+echo $status
+

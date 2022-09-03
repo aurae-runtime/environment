@@ -17,7 +17,7 @@
 #                                                                              #
 #   Licensed under the Apache License, Version 2.0 (the "License");            #
 #   you may not use this file except in compliance with the License.           #
-#   You may obtain headers-check copy of the License at                                    #
+#   You may obtain headers-check copy of the License at                        #
 #                                                                              #
 #       http://www.apache.org/licenses/LICENSE-2.0                             #
 #                                                                              #
@@ -29,45 +29,54 @@
 #                                                                              #
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
 
+# This script assumes running from the top level directory within a Makefile
+
+. hack/headers-files-to-check
+
 status=0
 
-EXPECTEDSCRIPT=$(cat .header.script)
-EXPECTEDSOURCE=$(cat .header.source)
-SCRIPTS=$(find . -name "*.sh" -not -path "./vendor/*")
-SOURCES=$(find .  -name "*.rs" -not -path "./vendor/*")
+echo ""
+echo ""
+echo " [ Checking Scripts ] ==========================================================================================="
+
 
 ### Check Scripts
-for FILE in $SCRIPTS; do
-
+for SCRIPT in $SCRIPTS; do
     # Bypass files here
-    if [ "$FILE" == "ignore.me" ]; then
+    if [ "$SCRIPT" == "ignore.me" ]; then
         continue
     fi
 
     # Replace the actual year with DATE so we can ignore the year when checking for the license header.
-    HEADER=$(head -n 13 $FILE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
+    HEADER=$(head -n 30 $SCRIPT | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
     if [ "$HEADER" != "$EXPECTEDSCRIPT" ]; then
-      echo "incorrect (script) license header: $FILE"
+      echo "  -> [FAILED SCRIPT FILE] Invalid header: $SCRIPT"
       STATUS=1
     fi
-
 done
+
+echo " [ Checking Source Code ] ======================================================================================="
+
 
 ### Check Source Files
-for FILE in $SOUCRES; do
+for SOURCE in $SOURCES; do
 
     # Bypass files here
-    if [ "$FILE" == "ignore.me" ]; then
+    if [ "$SOURCE" == "ignore.me" ]; then
         continue
     fi
 
     # Replace the actual year with DATE so we can ignore the year when checking for the license header.
-    HEADER=$(head -n 13 $FILE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
+    HEADER=$(head -n 30 $SOURCE | sed -E -e 's/Copyright © [0-9]+/Copyright © DATE/')
     if [ "$HEADER" != "$EXPECTEDSOURCE" ]; then
-      echo "incorrect (source) license header: $FILE"
+      echo "  -> [FAILED SOURCE FILE] Invalid header: $SOURCE"
       STATUS=1
     fi
 
 done
+
+echo " [ Checks Complete ] ============================================================================================"
+echo ""
+echo ""
 
 exit $STATUS
