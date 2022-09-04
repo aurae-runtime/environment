@@ -30,17 +30,30 @@
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
 #
 set -e
-#
-# Root CA Key           ca.key.pem
-# Root CA Certificate   ca.crt.pem
-#
-# Client CA             client_ca.pem
-# Client Certificate    client_1.pem
-# Client Key            client_1.key
-# Server Key            server.key.pem
-# Server cert           server.crt.pem
 echo ""
 
+# The certgen script will create the following files in
+# the /pki directory.
+#
+# -----------------------------------------------------
+# pki/
+# ├── aurae.ed25519.key
+# ├── ca.crt.pem
+# ├── ca.crt.srl
+# ├── ca.key.pem
+# ├── client.nova.crt.pem                                                     
+# ├── client.nova.key.pem                                                     
+# ├── client.system.crt.pem                                                   
+# ├── client.system.key.pem                                                   
+# ├── client.unsafe.crt.pem                                                   
+# ├── client.unsafe.key.pem                                                   
+# ├── server.crt.pem                                                          
+# ├── server.key.pem                                                          
+# ├── _signed.client.nova.crt.pem                                             
+# ├── _signed.client.system.crt.pem                                           
+# ├── _signed.client.unsafe.crt.pem                                           
+# └── _signed.server.crt.pem     
+# -----------------------------------------------------                                          
 # Generate a ed25519 private key
 echo " -> Generating Aurae ED25519 Key: aurae.ed25519.key..."
 openssl genpkey -algorithm ED25519 > ./pki/aurae.ed25519.key
