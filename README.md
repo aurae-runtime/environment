@@ -1,6 +1,6 @@
 # Aurae Installer and Builder Environment
 
-Meta level environment management for the Aurae runtime suite. Use this to develop against the suite. Use this to install the project toolchain into various Linux distributions.
+High level environment management for the Aurae runtime suite. Use this to develop against the suite. Use this to install the project toolchain into various Linux distributions.
 
 If you are working directly with the aurae toolchain, or its source code you should probably start here.
 
@@ -26,12 +26,3 @@ Or a wrapper for everything
 make all
 ```
 
-### Aurae /bin Scripts
-
-We also suggest adding the `/bin` directory in aurae to you `$PATH`.
-
-```
-d=$(pwd)
-export PATH=${PATH}:$d/aurae/bin
-echo "export PATH=${PATH}:$d/aurae/bin" >> ~/.bashrc
-```
