@@ -64,6 +64,9 @@ submodule: ## Initialize all submodules
 	cd auraed && git checkout $(subbranch) && git branch
 	cd api && git checkout $(subbranch) && git branch
 
+certs: ## Generate x509 mTLS certs in /pki directory
+	./hack/certgen
+
 key: keygen ## Alias for keygen
 keygen: ## Generate an SSH key for aurae: id_aurae
 	ssh-keygen -t ed25519 -a 1337 -f $(HOME)/.ssh/id_aurae
@@ -91,6 +94,7 @@ fmt: headers ## Format the entire code base(s)
 clean:
 	cd aurae && make clean
 	cd auraed && make clean
+	@rm -rvf pki/*
 	@rm -rvf target/*
 
 headers: headers-write ## Fix headers. Run this if you want to clobber things.

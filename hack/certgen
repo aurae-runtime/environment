@@ -29,11 +29,52 @@
 #                                                                              #
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
 #
-# Root CA               ca.pem
+# Root CA Key           ca.key.pem
+# Root CA Certificate   ca.crt.pem
+
+
 # Client CA             client_ca.pem
 # Client Certificate    client_1.pem
 # Client Key            client_1.key
-# Server pem            server.pem
-# Server Key            server.key
+# Server Key            server.key.pem
+# Server cert           server.crt.pem
+echo ""
+
+# Generate a ed25519 private key
+echo " -> Generating Aurae ED25519 Key: aurae.ed25519.key..."
+openssl genpkey -algorithm ED25519 > ./pki/aurae.ed25519.key
+
+## Generate a root CA
+echo " -> Generating Root CA From Aurae.ed25519.key: ca.key.pem, ca.crt.pem..."
+openssl req \
+  -new \
+  -x509 \
+  -nodes \
+  -days    9999 \
+  -subj    "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=aurae.io" \
+  -keyout  "./pki/ca.key.pem" \
+  -out     "./pki/ca.crt.pem" 2>/dev/null
+
+## Generate server material
+echo " -> Generating Server Material: server.key.pem, server.crt.pem..."
+openssl genrsa -out ./pki/server.key.pem 4096
+openssl req \
+  -new \
+  -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=aurae.io" \
+  -key    "./pki/server.key.pem" \
+  -out    "./pki/server.crt.pem" #2>/dev/null
+
+## Sign the server cert using the CA
+echo " -> Signing Server Material (Root CA): server.crt.pem..."
+openssl x509 \
+  -req \
+  -days   9999 \
+  -in     "./pki/server.crt.pem" \
+  -CA     "./pki/ca.crt.pem" \
+  -CAkey  "./pki/ca.key.pem" \
+  -CAcreateserial \
+  -out "server.crt.pem"
 
 
+
+echo ""
