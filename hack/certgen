@@ -54,6 +54,7 @@ openssl req \
   -subj    "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=aurae.io" \
   -keyout  "./pki/ca.key.pem" \
   -out     "./pki/ca.crt.pem" 2>/dev/null
+  ## TODO Add -key ./pki/aurae.ed25519.key to use the ed25519 key
 
 ## Generate server material
 echo " -> Generating Server Material: server.key.pem, server.crt.pem..."
@@ -62,7 +63,7 @@ openssl req \
   -new \
   -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=aurae.io" \
   -key    "./pki/server.key.pem" \
-  -out    "./pki/server.crt.pem" #2>/dev/null
+  -out    "./pki/server.crt.pem" 2>/dev/null
 
 ## Sign the server cert using the CA
 echo " -> Signing Server Material (Root CA): server.crt.pem..."
@@ -73,8 +74,11 @@ openssl x509 \
   -CA     "./pki/ca.crt.pem" \
   -CAkey  "./pki/ca.key.pem" \
   -CAcreateserial \
-  -out "server.crt.pem"
+  -out "./pki/server.crt.pem"
 
+## Verify the server material is signed
+echo " -> Verify Server Material (Root CA): server.crt.pem..."
+openssl verify -CAfile "./pki/ca.crt.pem" "./pki/server.crt.pem"
 
 
 echo ""
