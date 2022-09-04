@@ -1,0 +1,3 @@
+com.blai30.lotus.theme
+idea.plugin.protoeditor
+org.rust.lang
