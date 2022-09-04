@@ -88,8 +88,9 @@ auraed: ## Initialize and compile auraed
 	cp -v auraed/target/release/auraed target
 
 install: ## Install (copy) to /bin
-	chmod +x target/*
 	sudo -E cp -v target/* /bin
+	sudo -E mkdir -p /etc/aurae/pki
+	sudo -E cp -v pki/* /etc/aurae/pki
 
 fmt: headers ## Format the entire code base(s)
 	@./hack/code-format

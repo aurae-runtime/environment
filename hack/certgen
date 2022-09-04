@@ -90,5 +90,4 @@ openssl verify -CAfile "./pki/ca.crt.pem" "./pki/_signed.server.crt.pem" 1>/dev/
 # Client <system>
 . ./hack/certgen-client system
 
-echo " -> Okay"
 echo ""
