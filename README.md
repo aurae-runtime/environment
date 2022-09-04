@@ -11,8 +11,13 @@ All Aurae projects follow the `make` and `make install` convention. This is just
 To install everything Aurae on a Linux distribution run the following from this repository
 
 ```bash
+
+make submodules # Please do not forget to do this!
+
+# Then just follow a normal process
 make 
 sudo -E make install
+
 ```
 
 Or a wrapper for everything
@@ -21,12 +26,12 @@ Or a wrapper for everything
 make all
 ```
 
-### Aurae Scripts 
+### Aurae /bin Scripts
 
-We also suggest adding the `/bin` directory to you `$PATH`. 
+We also suggest adding the `/bin` directory in aurae to you `$PATH`.
 
 ```
 d=$(pwd)
-export PATH=${PATH}:$d/bin
-echo "export PATH=${PATH}:$d/bin" >> ~/.bashrc
+export PATH=${PATH}:$d/aurae/bin
+echo "export PATH=${PATH}:$d/aurae/bin" >> ~/.bashrc
 ```
