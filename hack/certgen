@@ -85,7 +85,10 @@ openssl verify -CAfile "./pki/ca.crt.pem" "./pki/_signed.server.crt.pem" 1>/dev/
 . ./hack/certgen-client nova
 
 # Client <unsafe>
-#. ./hack/certgen-client unsafe
+. ./hack/certgen-client unsafe
 
 # Client <system>
-#. ./hack/certgen-client system
+. ./hack/certgen-client system
+
+echo " -> Okay"
+echo ""
