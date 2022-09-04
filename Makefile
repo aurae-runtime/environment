@@ -28,7 +28,7 @@
 #                                                                              #
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
 
-submodulebranc   =  main
+subbranch   =  main
 
 default: aurae auraed
 all: default install
@@ -36,6 +36,9 @@ all: default install
 submodules: submodule ## Nobody is perfect, and git submodules are hard enough without having to remember to use the "s" or not.
 submodule: ## Initialize all submodules
 	@echo "Initializing submodules"
+	@echo ""
+	@read -p "Warning: This will destroy all work in subdirectories! Press any key to continue."
+
 	# Aurae
 	@if [ -d /tmp/aurae ]; then rm -rvf /tmp/aurae; fi
 	@if [ -d aurae ]; then mv -v aurae /tmp/aurae; fi
@@ -48,14 +51,18 @@ submodule: ## Initialize all submodules
 	@if [ -d /tmp/api ]; then rm -rvf /tmp/api; fi
 	@if [ -d api ]; then mv -v api /tmp/api; fi
 
+	# Scripts
+	@if [ -d /tmp/scripts ]; then rm -rvf /tmp/scripts; fi
+	@if [ -d scripts ]; then mv -v scripts /tmp/scripts; fi
+
 	# Init and update
 	@git submodule update --init --recursive
 	@git submodule update --remote --rebase
 
 	# Attach to main
-	cd aurae && git checkout $(submodulebranc) && git branch
-	cd auraed && git checkout $(submodulebranc) && git branch
-	cd api && git checkout $(submodulebranc) && git branch
+	cd aurae && git checkout $(subbranch) && git branch
+	cd auraed && git checkout $(subbranch) && git branch
+	cd api && git checkout $(subbranch) && git branch
 
 .PHONY: aurae
 aurae: ## Initialize and compile aurae
@@ -70,7 +77,7 @@ auraed: ## Initialize and compile auraed
 	cp -v auraed/target/release/auraed target
 
 install: ## Install (copy) to /bin
-	chmod +x bin/*
+	chmod +x target/*
 	sudo -E cp -v target/* /bin
 
 fmt: headers ## Format the entire code base(s)

@@ -9,3 +9,6 @@
 [submodule "api"]
 	path = api
 	url = git@github.com:aurae-runtime/api.git
+[submodule "scripts"]
+	path = scripts
+	url = git@github.com:aurae-runtime/scripts.git
