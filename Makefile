@@ -31,7 +31,7 @@
 subbranch   =  main
 
 default: aurae auraed
-all: default install
+all: default pki install
 
 submodules: submodule ## Nobody is perfect, and git submodules are hard enough without having to remember to use the "s" or not.
 submodule: ## Initialize all submodules
@@ -64,6 +64,8 @@ submodule: ## Initialize all submodules
 	cd auraed && git checkout $(subbranch) && git branch
 	cd api && git checkout $(subbranch) && git branch
 
+.PHONY: pki
+pki: certs ## Alias for certs
 certs: clean-certs ## Generate x509 mTLS certs in /pki directory
 	./hack/certgen
 
