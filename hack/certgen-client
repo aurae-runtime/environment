@@ -1,5 +1,6 @@
+#!/usr/bin/env bash
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
-#             Apache 2.0 License Copyright © 2022 The Aurae Authors            #
+#            Apache 2.0 License Copyright (c) 2022 The Aurae Authors           #
 #                                                                              #
 #                ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓                #
 #                ┃  █████╗ ██╗   ██╗██████╗  █████╗ ███████╗  ┃                #
@@ -16,7 +17,7 @@
 #                                                                              #
 #   Licensed under the Apache License, Version 2.0 (the "License");            #
 #   you may not use this file except in compliance with the License.           #
-#   You may obtain a copy of the License at                                    #
+#   You may obtain headers-check copy of the License at                        #
 #                                                                              #
 #       http://www.apache.org/licenses/LICENSE-2.0                             #
 #                                                                              #
@@ -27,87 +28,37 @@
 #   limitations under the License.                                             #                                                                             #
 #                                                                              #
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
+#
+set -e
+# certgen-client assumes certgen has been ran
 
-subbranch   =  main
+if [ -z "$1" ]; then
+    echo "Usage: ./hack/certgen-client <name>"
+    exit 1
+fi
+NAME=$1
+echo " -> Generating Client: ${NAME}..."
 
-default: aurae auraed
-all: default install
+## Generate client material
+echo " -> Generating Client Material: client.${NAME}.key.pem, client.${NAME}.crt.pem..."
+openssl genrsa -out "./pki/client.${NAME}.key.pem" 4096 2>/dev/null
+openssl req \
+  -new \
+  -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=client.${NAME}.unsafe.aurae.io" \
+  -key "./pki/client.${NAME}.key.pem" \
+  -out "./pki/client.${NAME}.crt.pem" 2>/dev/null
 
-submodules: submodule ## Nobody is perfect, and git submodules are hard enough without having to remember to use the "s" or not.
-submodule: ## Initialize all submodules
-	@echo "Initializing submodules"
-	@echo ""
-	@read -p "Warning: This will destroy all work in subdirectories! Press any key to continue."
+## Sign the client cert using the CA
+echo " -> Signing Client Material (Root CA): client.${NAME}.crt.pem..."
+openssl x509 \
+  -req \
+  -days   9999 \
+  -in     "./pki/client.${NAME}.crt.pem" \
+  -CA     "./pki/ca.crt.pem" \
+  -CAkey  "./pki/ca.key.pem" \
+  -CAcreateserial \
+  -out "./pki/_signed.client.${NAME}.crt.pem" 2>/dev/null
 
-	# Aurae
-	@if [ -d /tmp/aurae ]; then rm -rvf /tmp/aurae; fi
-	@if [ -d aurae ]; then mv -v aurae /tmp/aurae; fi
-
-	# Auraed
-	@if [ -d /tmp/auraed ]; then rm -rvf /tmp/auraed; fi
-	@if [ -d auraed ]; then mv -v auraed /tmp/auraed; fi
-
-	# API
-	@if [ -d /tmp/api ]; then rm -rvf /tmp/api; fi
-	@if [ -d api ]; then mv -v api /tmp/api; fi
-
-	# Scripts
-	@if [ -d /tmp/scripts ]; then rm -rvf /tmp/scripts; fi
-	@if [ -d scripts ]; then mv -v scripts /tmp/scripts; fi
-
-	# Init and update
-	@git submodule update --init --recursive
-	@git submodule update --remote --rebase
-
-	# Attach to main
-	cd aurae && git checkout $(subbranch) && git branch
-	cd auraed && git checkout $(subbranch) && git branch
-	cd api && git checkout $(subbranch) && git branch
-
-certs: clean-certs ## Generate x509 mTLS certs in /pki directory
-	./hack/certgen
-
-clean-certs: ## Clean the cert material
-	@rm -rvf pki/*
-
-
-key: keygen ## Alias for keygen
-keygen: ## Generate an SSH key for aurae: id_aurae
-	ssh-keygen -t ed25519 -a 1337 -f $(HOME)/.ssh/id_aurae
-
-.PHONY: aurae
-aurae: ## Initialize and compile aurae
-	@if [ ! -d aurae ]; then printf "\n\nError: Missing submodules. Run 'make submodule' to download aurae source before compiling.\n\n"; exit 1; fi
-	cd aurae && make
-	cp -v aurae/target/release/aurae target
-
-.PHONY: auraed
-auraed: ## Initialize and compile auraed
-	@if [ ! -d auraed ]; then printf "\n\nError:\nun 'make submodule' to download auraed source before compiling.\n\n"; exit 1; fi
-	cd auraed && make
-	cp -v auraed/target/release/auraed target
-
-install: ## Install (copy) to /bin
-	chmod +x target/*
-	sudo -E cp -v target/* /bin
-
-fmt: headers ## Format the entire code base(s)
-	@./hack/code-format
-
-.PHONY: clean
-clean: clean-certs
-	cd aurae && make clean
-	cd auraed && make clean
-	@rm -rvf target/*
-
-headers: headers-write ## Fix headers. Run this if you want to clobber things.
-
-headers-check: ## Only check for problematic files.
-	./hack/headers-check
-
-headers-write: ## Fix any problematic files blindly.
-	./hack/headers-write
-
-.PHONY: help
-help:  ## 🤔 Show help messages for make targets
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "[32m%-30s[0m %s", $$1, $$2}'
+## Verify the client material is signed
+echo " -> Verify Client Material (Root CA): client.${NAME}.crt.pem..."
+openssl verify -CAfile "./pki/ca.crt.pem" "./pki/_signed.client.${NAME}.crt.pem" 1>/dev/null && echo " -> Root Verification: Success!"

@@ -29,10 +29,11 @@
 #                                                                              #
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ #
 #
+set -e
+#
 # Root CA Key           ca.key.pem
 # Root CA Certificate   ca.crt.pem
-
-
+#
 # Client CA             client_ca.pem
 # Client Certificate    client_1.pem
 # Client Key            client_1.key
@@ -51,17 +52,17 @@ openssl req \
   -x509 \
   -nodes \
   -days    9999 \
-  -subj    "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=aurae.io" \
+  -subj    "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=unsafe.aurae.io" \
   -keyout  "./pki/ca.key.pem" \
   -out     "./pki/ca.crt.pem" 2>/dev/null
   ## TODO Add -key ./pki/aurae.ed25519.key to use the ed25519 key
 
 ## Generate server material
 echo " -> Generating Server Material: server.key.pem, server.crt.pem..."
-openssl genrsa -out ./pki/server.key.pem 4096
+openssl genrsa -out ./pki/server.key.pem 4096 2>/dev/null
 openssl req \
   -new \
-  -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=aurae.io" \
+  -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=server.unsafe.aurae.io" \
   -key    "./pki/server.key.pem" \
   -out    "./pki/server.crt.pem" 2>/dev/null
 
@@ -74,11 +75,17 @@ openssl x509 \
   -CA     "./pki/ca.crt.pem" \
   -CAkey  "./pki/ca.key.pem" \
   -CAcreateserial \
-  -out "./pki/server.crt.pem"
+  -out "./pki/_signed.server.crt.pem" 2>/dev/null
 
 ## Verify the server material is signed
 echo " -> Verify Server Material (Root CA): server.crt.pem..."
-openssl verify -CAfile "./pki/ca.crt.pem" "./pki/server.crt.pem"
+openssl verify -CAfile "./pki/ca.crt.pem" "./pki/_signed.server.crt.pem" 1>/dev/null && echo " -> Root Verification: Success!"
 
+# Client <nova>
+. ./hack/certgen-client nova
 
-echo ""
+# Client <unsafe>
+#. ./hack/certgen-client unsafe
+
+# Client <system>
+#. ./hack/certgen-client system
