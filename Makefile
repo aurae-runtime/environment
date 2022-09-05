@@ -60,9 +60,10 @@ submodule: ## Initialize all submodules
 	@git submodule update --remote --rebase
 
 	# Attach to main
-	cd aurae && git checkout $(subbranch) && git branch
-	cd auraed && git checkout $(subbranch) && git branch
-	cd api && git checkout $(subbranch) && git branch
+	cd aurae && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
+	cd auraed && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
+	cd api && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
+	cd scripts && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
 
 .PHONY: pki
 pki: certs ## Alias for certs
@@ -71,7 +72,6 @@ certs: clean-certs ## Generate x509 mTLS certs in /pki directory
 
 clean-certs: ## Clean the cert material
 	@rm -rvf pki/*
-
 
 key: keygen ## Alias for keygen
 keygen: ## Generate an SSH key for aurae: id_aurae
