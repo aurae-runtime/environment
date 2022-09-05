@@ -6,8 +6,6 @@
 
 #### Environmental Variables
 
-
-
 #### PKI (Public Key Infrastructure)
 
 Aurae leverages SSL certificates as its primary authentication mechanism. Aurae holds SSL certificates as a primary source of authorization as a first principle.
