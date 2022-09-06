@@ -30,8 +30,8 @@
 
 subbranch   =  main
 
-default: aurae auraed
-all: default pki install
+default: all
+all: install
 
 status: ## Wrapper for git status
 	git status
