@@ -33,6 +33,15 @@ subbranch   =  main
 default: aurae auraed
 all: default pki install
 
+status: ## Wrapper for git status
+	git status
+
+pull: ## Pull all the submodules from origin main
+	cd aurae && git pull origin $(subbranch)
+	cd auraed && git pull origin $(subbranch)
+	cd api && git pull origin $(subbranch)
+	cd scripts && git pull origin $(subbranch)
+
 submodules: submodule ## Nobody is perfect, and git submodules are hard enough without having to remember to use the "s" or not.
 submodule: ## Initialize all submodules
 	@echo "Initializing submodules"
