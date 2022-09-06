@@ -103,7 +103,8 @@ install: ## Install (copy) to /bin
 	cd auraed && make install
 	#sudo -E cp -v target/* /bin
 	sudo -E mkdir -p /etc/aurae/pki
-	sudo -E cp -v pki/* /etc/aurae/pki
+	sudo -E cp pki/* /etc/aurae/pki
+	@echo "Install PKI Auth Material"
 
 fmt: headers ## Format the entire code base(s)
 	@./hack/code-format
