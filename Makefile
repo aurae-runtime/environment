@@ -74,6 +74,10 @@ submodule: ## Initialize all submodules
 	cd api && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
 	cd scripts && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
 
+.PHONY: config
+config: ## Set up default config
+	sudo -E cp -v aurae/default.config.toml /etc/aurae/config
+
 .PHONY: pki
 pki: certs ## Alias for certs
 certs: clean-certs ## Generate x509 mTLS certs in /pki directory
@@ -98,7 +102,7 @@ auraed: ## Initialize and compile auraed
 	cd auraed && make
 	cp -v auraed/target/release/auraed target
 
-install: ## Install (copy) to /bin
+install: config ## Install (copy) to /bin
 	cd aurae && make install
 	cd auraed && make install
 	#sudo -E cp -v target/* /bin
