@@ -33,6 +33,9 @@ subbranch   =  main
 default: all
 all: install
 
+update: ## Update rustup (nightly)
+	rustup update
+
 status: ## Wrapper for git status
 	git status
 
