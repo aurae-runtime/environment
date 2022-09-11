@@ -96,13 +96,13 @@ keygen: ## Generate an SSH key for aurae: id_aurae
 .PHONY: aurae
 aurae: ## Initialize and compile aurae
 	@if [ ! -d aurae ]; then printf "\n\nError: Missing submodules. Run 'make submodule' to download aurae source before compiling.\n\n"; exit 1; fi
-	cd aurae && make
+	cd aurae && make install
 	cp -v aurae/target/release/aurae target
 
 .PHONY: auraed
 auraed: ## Initialize and compile auraed
 	@if [ ! -d auraed ]; then printf "\n\nError:\nun 'make submodule' to download auraed source before compiling.\n\n"; exit 1; fi
-	cd auraed && make
+	cd auraed && make install
 	cp -v auraed/target/release/auraed target
 
 install: config ## Install (copy) to /bin
