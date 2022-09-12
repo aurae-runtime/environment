@@ -79,7 +79,8 @@ submodule: ## Initialize all submodules
 
 .PHONY: config
 config: ## Set up default config
-	sudo -E cp -v aurae/default.config.toml /etc/aurae/config
+	cp -v aurae/default.config.toml $(HOME)/.aurae/config
+	sed -i 's|~|$(HOME)|g' $(HOME)/.aurae/config # Tilde expansion is annoying in rust
 
 .PHONY: pki
 pki: certs ## Alias for certs
@@ -109,8 +110,8 @@ install: config ## Install (copy) to /bin
 	cd aurae && make install
 	cd auraed && make install
 	#sudo -E cp -v target/* /bin
-	sudo -E mkdir -p /etc/aurae/pki
-	sudo -E cp pki/* /etc/aurae/pki
+	mkdir -p $(HOME)/.aurae/pki
+	cp pki/* $(HOME)/.aurae/pki
 	@echo "Install PKI Auth Material"
 
 fmt: headers ## Format the entire code base(s)
