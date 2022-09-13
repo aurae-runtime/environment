@@ -12,3 +12,6 @@
 [submodule "scripts"]
 	path = scripts
 	url = git@github.com:aurae-runtime/scripts.git
+[submodule "authx"]
+	path = authx
+	url = git@github.com:aurae-runtime/authx.git
