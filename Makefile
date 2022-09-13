@@ -79,16 +79,16 @@ submodule: ## Initialize all submodules
 
 .PHONY: config
 config: ## Set up default config
-	cp -v aurae/default.config.toml $(HOME)/.aurae/config
-	sed -i 's|~|$(HOME)|g' $(HOME)/.aurae/config # Tilde expansion is annoying in rust
+	@mkdir -p $(HOME)/.aurae
+	@cp -v aurae/default.config.toml $(HOME)/.aurae/config
+	@sed -i 's|~|$(HOME)|g' $(HOME)/.aurae/config
+	@mkdir -p $(HOME)/.aurae/pki
+	@cp -v pki/* $(HOME)/.aurae/pki
 
 .PHONY: pki
 pki: certs ## Alias for certs
 certs: clean-certs ## Generate x509 mTLS certs in /pki directory
 	./hack/certgen
-	mkdir -p $(HOME)/.aurae/pki
-	cp pki/* $(HOME)/.aurae/pki
-	@echo "Install PKI Auth Material [\$HOME]"
 	sudo -E mkdir -p /etc/aurae/pki
 	sudo -E cp pki/* /etc/aurae/pki
 	@echo "Install PKI Auth Material [/etc/aurae]"
@@ -112,11 +112,9 @@ auraed: ## Initialize and compile auraed
 	cd auraed && make install
 	@echo "Success: Auraed"
 
-install: config ## Install (copy) to /bin
+install: ## Install (copy) to /bin
 	cd aurae && make install
 	cd auraed && make install
-	#sudo -E cp -v target/* /bin
-
 
 fmt: headers ## Format the entire code base(s)
 	@./hack/code-format
