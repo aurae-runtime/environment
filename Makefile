@@ -59,6 +59,10 @@ submodule: ## Initialize all submodules
 	@if [ -d /tmp/auraed ]; then rm -rvf /tmp/auraed; fi
 	@if [ -d auraed ]; then mv -v auraed /tmp/auraed; fi
 
+	# Authx
+	@if [ -d /tmp/authx ]; then rm -rvf /tmp/authx; fi
+	@if [ -d authx ]; then mv -v authx /tmp/authx; fi
+
 	# API
 	@if [ -d /tmp/api ]; then rm -rvf /tmp/api; fi
 	@if [ -d api ]; then mv -v api /tmp/api; fi
@@ -74,6 +78,7 @@ submodule: ## Initialize all submodules
 	# Attach to main
 	cd aurae && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
 	cd auraed && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
+	cd authx && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
 	cd api && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
 	cd scripts && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
 
