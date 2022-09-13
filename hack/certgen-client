@@ -44,7 +44,7 @@ echo " -> Generating Client Material: client.${NAME}.key.pem, client.${NAME}.crt
 openssl genrsa -out "./pki/client.${NAME}.key.pem" 4096 2>/dev/null
 openssl req \
   -new \
-  -addext "subjectAltName = DNS:client.aurae.io" \
+  -addext "subjectAltName = DNS:localhost" \
   -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=client.${NAME}.unsafe.aurae.io" \
   -key "./pki/client.${NAME}.key.pem" \
   -out "./pki/client.${NAME}.crt.pem" 2>/dev/null

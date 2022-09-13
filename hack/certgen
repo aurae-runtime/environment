@@ -65,7 +65,7 @@ openssl req \
   -x509 \
   -nodes \
   -days    9999 \
-  -addext "subjectAltName = DNS:root.aurae.io" \
+  -addext "subjectAltName = DNS:localhost" \
   -subj    "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=unsafe.aurae.io" \
   -keyout  "./pki/ca.key.pem" \
   -out     "./pki/ca.crt.pem" 2>/dev/null
@@ -76,7 +76,7 @@ echo " -> Generating Server Material: server.key.pem, server.crt.pem..."
 openssl genrsa -out ./pki/server.key.pem 4096 2>/dev/null
 openssl req \
   -new \
-  -addext "subjectAltName = DNS:server.aurae.io" \
+  -addext "subjectAltName = DNS:localhost" \
   -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=server.unsafe.aurae.io" \
   -key    "./pki/server.key.pem" \
   -out    "./pki/server.crt.pem" 2>/dev/null
