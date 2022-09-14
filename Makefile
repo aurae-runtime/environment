@@ -40,6 +40,7 @@ status: ## Wrapper for git status
 	git status
 
 pull: ## Pull all the submodules from origin main
+	git pull origin $(subbranch)
 	cd aurae && git pull origin $(subbranch)
 	cd auraed && git pull origin $(subbranch)
 	cd authx && git pull origin $(subbranch)
