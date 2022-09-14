@@ -42,6 +42,7 @@ status: ## Wrapper for git status
 pull: ## Pull all the submodules from origin main
 	cd aurae && git pull origin $(subbranch)
 	cd auraed && git pull origin $(subbranch)
+	cd authx && git pull origin $(subbranch)
 	cd api && git pull origin $(subbranch)
 	cd scripts && git pull origin $(subbranch)
 
@@ -89,6 +90,9 @@ config: ## Set up default config
 	@sed -i 's|~|$(HOME)|g' $(HOME)/.aurae/config
 	@mkdir -p $(HOME)/.aurae/pki
 	@cp -v pki/* $(HOME)/.aurae/pki
+
+tlsinfo: ## Show TLS Info for /var/run/aurae*
+	./hack/server-tls-info
 
 .PHONY: pki
 pki: certs ## Alias for certs

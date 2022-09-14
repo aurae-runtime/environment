@@ -28,38 +28,5 @@
 #   limitations under the License.                                             #
 #                                                                              #
 # ---------------------------------------------------------------------------- #
-#
-set -e
-# certgen-client assumes certgen has been ran
 
-if [ -z "$1" ]; then
-    echo "Usage: ./hack/certgen-client <name>"
-    exit 1
-fi
-NAME=$1
-echo " -> Generating Client: ${NAME}..."
-
-## Generate client material
-echo " -> Generating Client Material: client.${NAME}.key, client.${NAME}.crt..."
-openssl genrsa -out "./pki/client.${NAME}.key" 4096 2>/dev/null
-openssl req \
-  -new \
-  -addext "subjectAltName = DNS:localhost" \
-  -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=client.${NAME}.unsafe.aurae.io" \
-  -key "./pki/client.${NAME}.key" \
-  -out "./pki/client.${NAME}.crt" 2>/dev/null
-
-## Sign the client cert using the CA
-echo " -> Signing Client Material (Root CA): client.${NAME}.crt..."
-openssl x509 \
-  -req \
-  -days   9999 \
-  -in     "./pki/client.${NAME}.crt" \
-  -CA     "./pki/ca.crt" \
-  -CAkey  "./pki/ca.key" \
-  -CAcreateserial \
-  -out "./pki/_signed.client.${NAME}.crt" 2>/dev/null
-
-## Verify the client material is signed
-echo " -> Verify Client Material (Root CA): client.${NAME}.crt..."
-openssl verify -CAfile "./pki/ca.crt" "./pki/_signed.client.${NAME}.crt" 1>/dev/null && echo " -> Root Verification: Success!"
+openssl s_client -showcerts -unix /var/run/aurae/aurae.sock

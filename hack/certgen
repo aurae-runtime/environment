@@ -38,28 +38,28 @@ echo ""
 # -----------------------------------------------------
 # pki/
 # ├── aurae.ed25519.key
-# ├── ca.crt.pem
+# ├── ca.crt
 # ├── ca.crt.srl
-# ├── ca.key.pem
-# ├── client.nova.crt.pem                                                     
-# ├── client.nova.key.pem                                                     
-# ├── client.system.crt.pem                                                   
-# ├── client.system.key.pem                                                   
-# ├── client.unsafe.crt.pem                                                   
-# ├── client.unsafe.key.pem                                                   
-# ├── server.crt.pem                                                          
-# ├── server.key.pem                                                          
-# ├── _signed.client.nova.crt.pem                                             
-# ├── _signed.client.system.crt.pem                                           
-# ├── _signed.client.unsafe.crt.pem                                           
-# └── _signed.server.crt.pem     
+# ├── ca.key
+# ├── client.nova.crt                                                     
+# ├── client.nova.key                                                     
+# ├── client.system.crt                                                   
+# ├── client.system.key                                                   
+# ├── client.unsafe.crt                                                   
+# ├── client.unsafe.key                                                   
+# ├── server.crt                                                          
+# ├── server.key                                                          
+# ├── _signed.client.nova.crt                                             
+# ├── _signed.client.system.crt                                           
+# ├── _signed.client.unsafe.crt                                           
+# └── _signed.server.crt     
 # -----------------------------------------------------                                          
 # Generate a ed25519 private key
 echo " -> Generating Aurae ED25519 Key: aurae.ed25519.key..."
 openssl genpkey -algorithm ED25519 > ./pki/aurae.ed25519.key
 
 ## Generate a root CA
-echo " -> Generating Root CA From Aurae.ed25519.key: ca.key.pem, ca.crt.pem..."
+echo " -> Generating Root CA From Aurae.ed25519.key: ca.key, ca.crt..."
 openssl req \
   -new \
   -x509 \
@@ -67,34 +67,34 @@ openssl req \
   -days    9999 \
   -addext "subjectAltName = DNS:localhost" \
   -subj    "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=unsafe.aurae.io" \
-  -keyout  "./pki/ca.key.pem" \
-  -out     "./pki/ca.crt.pem" 2>/dev/null
+  -keyout  "./pki/ca.key" \
+  -out     "./pki/ca.crt" 2>/dev/null
   ## TODO Add -key ./pki/aurae.ed25519.key to use the ed25519 key
 
 ## Generate server material
-echo " -> Generating Server Material: server.key.pem, server.crt.pem..."
-openssl genrsa -out ./pki/server.key.pem 4096 2>/dev/null
+echo " -> Generating Server Material: server.key, server.crt..."
+openssl genrsa -out ./pki/server.key 4096 2>/dev/null
 openssl req \
   -new \
   -addext "subjectAltName = DNS:localhost" \
   -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=server.unsafe.aurae.io" \
-  -key    "./pki/server.key.pem" \
-  -out    "./pki/server.crt.pem" 2>/dev/null
+  -key    "./pki/server.key" \
+  -out    "./pki/server.crt" 2>/dev/null
 
 ## Sign the server cert using the CA
-echo " -> Signing Server Material (Root CA): server.crt.pem..."
+echo " -> Signing Server Material (Root CA): server.crt..."
 openssl x509 \
   -req \
   -days   9999 \
-  -in     "./pki/server.crt.pem" \
-  -CA     "./pki/ca.crt.pem" \
-  -CAkey  "./pki/ca.key.pem" \
+  -in     "./pki/server.crt" \
+  -CA     "./pki/ca.crt" \
+  -CAkey  "./pki/ca.key" \
   -CAcreateserial \
-  -out "./pki/_signed.server.crt.pem" 2>/dev/null
+  -out "./pki/_signed.server.crt" 2>/dev/null
 
 ## Verify the server material is signed
-echo " -> Verify Server Material (Root CA): server.crt.pem..."
-openssl verify -CAfile "./pki/ca.crt.pem" "./pki/_signed.server.crt.pem" 1>/dev/null && echo " -> Root Verification: Success!"
+echo " -> Verify Server Material (Root CA): server.crt..."
+openssl verify -CAfile "./pki/ca.crt" "./pki/_signed.server.crt" 1>/dev/null && echo " -> Root Verification: Success!"
 
 # Client <nova>
 . ./hack/certgen-client nova
