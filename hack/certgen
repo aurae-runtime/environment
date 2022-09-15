@@ -71,11 +71,12 @@ openssl req \
   -out     "./pki/ca.crt" 2>/dev/null
   ## TODO Add -key ./pki/aurae.ed25519.key to use the ed25519 key
 
-## Generate server material
+## Generate server CSR
 echo " -> Generating Server Material: server.key, server.csr..."
 openssl genrsa -out ./pki/server.key 4096 2>/dev/null
 openssl req \
   -new \
+  -extensions v3_req \
   -addext "subjectAltName = DNS:localhost" \
   -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=server.unsafe.aurae.io" \
   -key    "./pki/server.key" \
@@ -86,6 +87,7 @@ echo " -> Signing Server Material (Root CA): server.csr..."
 openssl x509 \
   -req \
   -days   9999 \
+  -extensions v3_req \
   -in     "./pki/server.csr" \
   -CA     "./pki/ca.crt" \
   -CAkey  "./pki/ca.key" \
