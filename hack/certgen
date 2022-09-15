@@ -69,14 +69,12 @@ openssl req \
   -subj    "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=unsafe.aurae.io" \
   -keyout  "./pki/ca.key" \
   -out     "./pki/ca.crt" 2>/dev/null
-  ## TODO Add -key ./pki/aurae.ed25519.key to use the ed25519 key
 
 ## Generate server CSR
 echo " -> Generating Server Material: server.key, server.csr..."
 openssl genrsa -out ./pki/server.key 4096 2>/dev/null
 openssl req \
   -new \
-  -extensions v3_req \
   -addext "subjectAltName = DNS:localhost" \
   -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=server.unsafe.aurae.io" \
   -key    "./pki/server.key" \
@@ -87,7 +85,7 @@ echo " -> Signing Server Material (Root CA): server.csr..."
 openssl x509 \
   -req \
   -days   9999 \
-  -extensions v3_req \
+  -extfile "./hack/v3.client.ext" \
   -in     "./pki/server.csr" \
   -CA     "./pki/ca.crt" \
   -CAkey  "./pki/ca.key" \
@@ -107,4 +105,7 @@ openssl verify -CAfile "./pki/ca.crt" "./pki/_signed.server.crt" 1>/dev/null && 
 # Client <system>
 . ./hack/certgen-client system
 
+echo "x509 Version Numbers: "
+openssl x509 -noout -text -in "./pki/_signed.server.crt" | grep "Version"
+openssl x509 -noout -text -in "./pki/_signed.client.unsafe.crt" | grep "Version"
 echo ""
