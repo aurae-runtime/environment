@@ -41,19 +41,19 @@ echo ""
 # ├── ca.crt
 # ├── ca.crt.srl
 # ├── ca.key
-# ├── client.nova.crt                                                     
-# ├── client.nova.key                                                     
-# ├── client.system.crt                                                   
-# ├── client.system.key                                                   
-# ├── client.unsafe.crt                                                   
-# ├── client.unsafe.key                                                   
-# ├── server.crt                                                          
-# ├── server.key                                                          
-# ├── _signed.client.nova.crt                                             
-# ├── _signed.client.system.crt                                           
-# ├── _signed.client.unsafe.crt                                           
-# └── _signed.server.crt     
-# -----------------------------------------------------                                          
+# ├── client.nova.csr
+# ├── client.nova.key
+# ├── client.system.csr
+# ├── client.system.key
+# ├── client.unsafe.csr
+# ├── client.unsafe.key
+# ├── server.csr
+# ├── server.key
+# ├── _signed.client.nova.crt
+# ├── _signed.client.system.crt
+# ├── _signed.client.unsafe.crt
+# └── _signed.server.crt
+# -----------------------------------------------------
 # Generate a ed25519 private key
 echo " -> Generating Aurae ED25519 Key: aurae.ed25519.key..."
 openssl genpkey -algorithm ED25519 > ./pki/aurae.ed25519.key
@@ -72,28 +72,28 @@ openssl req \
   ## TODO Add -key ./pki/aurae.ed25519.key to use the ed25519 key
 
 ## Generate server material
-echo " -> Generating Server Material: server.key, server.crt..."
+echo " -> Generating Server Material: server.key, server.csr..."
 openssl genrsa -out ./pki/server.key 4096 2>/dev/null
 openssl req \
   -new \
   -addext "subjectAltName = DNS:localhost" \
   -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=server.unsafe.aurae.io" \
   -key    "./pki/server.key" \
-  -out    "./pki/server.crt" 2>/dev/null
+  -out    "./pki/server.csr" 2>/dev/null
 
 ## Sign the server cert using the CA
-echo " -> Signing Server Material (Root CA): server.crt..."
+echo " -> Signing Server Material (Root CA): server.csr..."
 openssl x509 \
   -req \
   -days   9999 \
-  -in     "./pki/server.crt" \
+  -in     "./pki/server.csr" \
   -CA     "./pki/ca.crt" \
   -CAkey  "./pki/ca.key" \
   -CAcreateserial \
   -out "./pki/_signed.server.crt" 2>/dev/null
 
 ## Verify the server material is signed
-echo " -> Verify Server Material (Root CA): server.crt..."
+echo " -> Verify Server Material (Root CA): server.csr..."
 openssl verify -CAfile "./pki/ca.crt" "./pki/_signed.server.crt" 1>/dev/null && echo " -> Root Verification: Success!"
 
 # Client <nova>

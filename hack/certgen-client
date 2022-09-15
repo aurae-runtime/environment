@@ -40,26 +40,26 @@ NAME=$1
 echo " -> Generating Client: ${NAME}..."
 
 ## Generate client material
-echo " -> Generating Client Material: client.${NAME}.key, client.${NAME}.crt..."
+echo " -> Generating Client Material: client.${NAME}.key, client.${NAME}.csr..."
 openssl genrsa -out "./pki/client.${NAME}.key" 4096 2>/dev/null
 openssl req \
   -new \
   -addext "subjectAltName = DNS:localhost" \
   -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=client.${NAME}.unsafe.aurae.io" \
   -key "./pki/client.${NAME}.key" \
-  -out "./pki/client.${NAME}.crt" 2>/dev/null
+  -out "./pki/client.${NAME}.csr" 2>/dev/null
 
 ## Sign the client cert using the CA
-echo " -> Signing Client Material (Root CA): client.${NAME}.crt..."
+echo " -> Signing Client Material (Root CA): client.${NAME}.csr..."
 openssl x509 \
   -req \
   -days   9999 \
-  -in     "./pki/client.${NAME}.crt" \
+  -in     "./pki/client.${NAME}.csr" \
   -CA     "./pki/ca.crt" \
   -CAkey  "./pki/ca.key" \
   -CAcreateserial \
   -out "./pki/_signed.client.${NAME}.crt" 2>/dev/null
 
 ## Verify the client material is signed
-echo " -> Verify Client Material (Root CA): client.${NAME}.crt..."
+echo " -> Verify Client Material (Root CA): client.${NAME}.csr..."
 openssl verify -CAfile "./pki/ca.crt" "./pki/_signed.client.${NAME}.crt" 1>/dev/null && echo " -> Root Verification: Success!"
