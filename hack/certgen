@@ -32,31 +32,9 @@
 set -e
 echo ""
 
-# The certgen script will create the following files in
-# the /pki directory.
-#
-# -----------------------------------------------------
-# pki/
-# ├── aurae.ed25519.key
-# ├── ca.crt
-# ├── ca.crt.srl
-# ├── ca.key
-# ├── client.nova.csr
-# ├── client.nova.key
-# ├── client.system.csr
-# ├── client.system.key
-# ├── client.unsafe.csr
-# ├── client.unsafe.key
-# ├── server.csr
-# ├── server.key
-# ├── _signed.client.nova.crt
-# ├── _signed.client.system.crt
-# ├── _signed.client.unsafe.crt
-# └── _signed.server.crt
-# -----------------------------------------------------
 # Generate a ed25519 private key
-echo " -> Generating Aurae ED25519 Key: aurae.ed25519.key..."
-openssl genpkey -algorithm ED25519 > ./pki/aurae.ed25519.key
+#echo " -> Generating Aurae ED25519 Key: aurae.ed25519.key..."
+#openssl genpkey -algorithm ED25519 > ./pki/aurae.ed25519.key
 
 ## Generate a root CA
 echo " -> Generating Root CA From Aurae.ed25519.key: ca.key, ca.crt..."
@@ -65,7 +43,7 @@ openssl req \
   -x509 \
   -nodes \
   -days    9999 \
-  -addext "subjectAltName = DNS:localhost" \
+  -addext  "subjectAltName = DNS:localhost" \
   -subj    "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=unsafe.aurae.io" \
   -keyout  "./pki/ca.key" \
   -out     "./pki/ca.crt" 2>/dev/null
@@ -86,9 +64,9 @@ openssl x509 \
   -req \
   -days   9999 \
   -extfile "./hack/v3.client.ext" \
-  -in     "./pki/server.csr" \
-  -CA     "./pki/ca.crt" \
-  -CAkey  "./pki/ca.key" \
+  -in      "./pki/server.csr" \
+  -CA      "./pki/ca.crt" \
+  -CAkey   "./pki/ca.key" \
   -CAcreateserial \
   -out "./pki/_signed.server.crt" 2>/dev/null
 
