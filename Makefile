@@ -100,7 +100,7 @@ pki: certs ## Alias for certs
 certs: clean-certs ## Generate x509 mTLS certs in /pki directory
 	./hack/certgen
 	sudo -E mkdir -p /etc/aurae/pki
-	sudo -E cp pki/* /etc/aurae/pki
+	sudo -E cp -v pki/* /etc/aurae/pki
 	@echo "Install PKI Auth Material [/etc/aurae]"
 
 clean-certs: ## Clean the cert material
