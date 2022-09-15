@@ -51,7 +51,7 @@ submodules: submodule ## Nobody is perfect, and git submodules are hard enough w
 submodule: ## Initialize all submodules
 	@echo "Initializing submodules"
 	@echo ""
-	@read -p "Warning: This will destroy all work in subdirectories! Press any key to continue."
+	@read -p "Warning: This will destroy all work in subdirectories! Press any key to continue." FOO
 
 	# Aurae
 	@if [ -d /tmp/aurae ]; then rm -rvf /tmp/aurae; fi
