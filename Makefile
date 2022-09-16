@@ -129,7 +129,7 @@ aurae: ## Initialize and compile aurae
 	@echo "Success: Aurae"
 
 .PHONY: auraectl
-aurae: ## Initialize and compile auraectl
+auraectl: ## Initialize and compile auraectl
 	@if [ ! -d auraectl ]; then printf "\n\nError: Missing submodules. Run 'make submodule' to download aurae source before compiling.\n\n"; exit 1; fi
 	cd auraectl && make install
 	@echo "Success: Auraectl"
