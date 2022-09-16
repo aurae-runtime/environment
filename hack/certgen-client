@@ -53,7 +53,7 @@ openssl req \
 echo " -> Signing Client Material (Root CA): client.${NAME}.csr..."
 openssl x509 \
   -req \
-  -extfile "./hack/v3.client.ext" \
+  -extfile "./hack/certgen.client.ext" \
   -days   9999 \
   -in     "./pki/client.${NAME}.csr" \
   -CA     "./pki/ca.crt" \

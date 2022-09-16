@@ -63,12 +63,12 @@ echo " -> Signing Server Material (Root CA): server.csr..."
 openssl x509 \
   -req \
   -days   9999 \
-  -extfile "./hack/v3.client.ext" \
+  -extfile "./hack/certgen.client.ext" \
   -in      "./pki/server.csr" \
   -CA      "./pki/ca.crt" \
   -CAkey   "./pki/ca.key" \
   -CAcreateserial \
-  -extfile "./hack/server.ext" \
+  -extfile "./hack/certgen.server.ext" \
   -out "./pki/_signed.server.crt" 2>/dev/null
 
 ## Verify the server material is signed
