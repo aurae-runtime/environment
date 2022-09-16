@@ -42,6 +42,7 @@ status: ## Wrapper for git status
 pull: ## Pull all the submodules from origin main
 	git pull origin $(subbranch)
 	cd aurae && git pull origin $(subbranch)
+	cd auraectl && git pull origin $(subbranch)
 	cd auraed && git pull origin $(subbranch)
 	cd authx && git pull origin $(subbranch)
 	cd api && git pull origin $(subbranch)
@@ -51,11 +52,15 @@ submodules: submodule ## Nobody is perfect, and git submodules are hard enough w
 submodule: ## Initialize all submodules
 	@echo "Initializing submodules"
 	@echo ""
-	@read -p "Warning: This will destroy all work in subdirectories! Press any key to continue."
+	@read -p "Warning: This will destroy all work in subdirectories! Press any key to continue." FOO
 
 	# Aurae
 	@if [ -d /tmp/aurae ]; then rm -rvf /tmp/aurae; fi
 	@if [ -d aurae ]; then mv -v aurae /tmp/aurae; fi
+
+	# Auraectl
+	@if [ -d /tmp/auraectl ]; then rm -rvf /tmp/auraectl; fi
+	@if [ -d auraectl ]; then mv -v auraectl /tmp/auraectl; fi
 
 	# Auraed
 	@if [ -d /tmp/auraed ]; then rm -rvf /tmp/auraed; fi
@@ -79,6 +84,7 @@ submodule: ## Initialize all submodules
 
 	# Attach to main
 	cd aurae && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
+	cd auraectl && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
 	cd auraed && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
 	cd authx && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
 	cd api && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
@@ -122,6 +128,12 @@ aurae: ## Initialize and compile aurae
 	cd aurae && make install
 	@echo "Success: Aurae"
 
+.PHONY: auraectl
+aurae: ## Initialize and compile auraectl
+	@if [ ! -d auraectl ]; then printf "\n\nError: Missing submodules. Run 'make submodule' to download aurae source before compiling.\n\n"; exit 1; fi
+	cd auraectl && make install
+	@echo "Success: Auraectl"
+
 .PHONY: auraed
 auraed: ## Initialize and compile auraed
 	@if [ ! -d auraed ]; then printf "\n\nError:\nun 'make submodule' to download auraed source before compiling.\n\n"; exit 1; fi
@@ -130,6 +142,7 @@ auraed: ## Initialize and compile auraed
 
 install: ## Install (copy) to /bin
 	cd aurae && make install
+	cd auraectl && make install
 	cd auraed && make install
 
 fmt: headers ## Format the entire code base(s)
@@ -138,6 +151,7 @@ fmt: headers ## Format the entire code base(s)
 .PHONY: clean
 clean: clean-certs
 	cd aurae && make clean
+	cd auraectl && make clean
 	cd auraed && make clean
 	@rm -rvf target/*
 

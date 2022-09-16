@@ -15,3 +15,6 @@
 [submodule "authx"]
 	path = authx
 	url = git@github.com:aurae-runtime/authx.git
+[submodule "auraectl"]
+	path = auraectl
+	url = git@github.com:wesen/auraectl
