@@ -43,7 +43,7 @@ openssl req \
   -x509 \
   -nodes \
   -days    9999 \
-  -addext  "subjectAltName = DNS:localhost" \
+  -addext  "subjectAltName = DNS:unsafe.aurae.io" \
   -subj    "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=unsafe.aurae.io" \
   -keyout  "./pki/ca.key" \
   -out     "./pki/ca.crt" 2>/dev/null
@@ -53,8 +53,8 @@ echo " -> Generating Server Material: server.key, server.csr..."
 openssl genrsa -out ./pki/server.key 4096 2>/dev/null
 openssl req \
   -new \
-  -addext "subjectAltName = DNS:localhost" \
   -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=server.unsafe.aurae.io" \
+  -addext "subjectAltName = DNS:server.unsafe.aurae.io" \
   -key    "./pki/server.key" \
   -out    "./pki/server.csr" 2>/dev/null
 
@@ -68,6 +68,7 @@ openssl x509 \
   -CA      "./pki/ca.crt" \
   -CAkey   "./pki/ca.key" \
   -CAcreateserial \
+  -extfile "./hack/server.ext" \
   -out "./pki/_signed.server.crt" 2>/dev/null
 
 ## Verify the server material is signed
