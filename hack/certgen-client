@@ -44,10 +44,10 @@ echo " -> Generating Client Material: client.${NAME}.key, client.${NAME}.csr..."
 openssl genrsa -out "./pki/client.${NAME}.key" 4096 2>/dev/null
 openssl req \
   -new \
-  -addext "subjectAltName = DNS:${NAME}.unsafe.aurae.io" \
-  -subj   "/C=IS/ST=Reykjavík/L=Reykjavík/O=Aurae/OU=Runtime/CN=client.${NAME}.unsafe.aurae.io" \
-  -key "./pki/client.${NAME}.key" \
-  -out "./pki/client.${NAME}.csr" 2>/dev/null
+  -addext  "subjectAltName = DNS:${NAME}.unsafe.aurae.io" \
+  -subj    "/C=IS/ST=aurae/L=aurae/O=Aurae/OU=Runtime/CN=${NAME}.unsafe.aurae.io" \
+  -key     "./pki/client.${NAME}.key" \
+  -out     "./pki/client.${NAME}.csr" 2>/dev/null
 
 ## Sign the client cert using the CA
 echo " -> Signing Client Material (Root CA): client.${NAME}.csr..."

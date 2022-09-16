@@ -103,8 +103,14 @@ certs: clean-certs ## Generate x509 mTLS certs in /pki directory
 	sudo -E cp -v pki/* /etc/aurae/pki
 	@echo "Install PKI Auth Material [/etc/aurae]"
 
+certs2: ## Alias for certs use cfssl
+	./hack/cfsslgen
+
 clean-certs: ## Clean the cert material
 	@rm -rvf pki/*
+
+arch: ## Install certs for Archlinux
+	./hack/certgen.import.ca.arch
 
 key: keygen ## Alias for keygen
 keygen: ## Generate an SSH key for aurae: id_aurae

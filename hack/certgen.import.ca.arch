@@ -32,59 +32,7 @@
 set -e
 echo ""
 
-# Generate a ed25519 private key
-#echo " -> Generating Aurae ED25519 Key: aurae.ed25519.key..."
-#openssl genpkey -algorithm ED25519 > ./pki/aurae.ed25519.key
-
-## Generate a root CA
-echo " -> Generating Root CA: ca.key, ca.crt..."
-openssl req \
-  -new \
-  -x509 \
-  -nodes \
-  -days    9999 \
-  -addext  "subjectAltName = DNS:unsafe.aurae.io" \
-  -subj    "/C=IS/ST=aurae/L=aurae/O=Aurae/OU=Runtime/CN=unsafe.aurae.io" \
-  -keyout  "./pki/ca.key" \
-  -out     "./pki/ca.crt" 2>/dev/null
-
-## Generate server CSR
-echo " -> Generating Server Material: server.key, server.csr..."
-openssl genrsa -out ./pki/server.key 4096 2>/dev/null
-openssl req \
-  -new \
-  -subj    "/C=IS/ST=aurae/L=aurae/O=Aurae/OU=Runtime/CN=server.unsafe.aurae.io" \
-  -addext "subjectAltName = DNS:server.unsafe.aurae.io" \
-  -key    "./pki/server.key" \
-  -out    "./pki/server.csr" 2>/dev/null
-
-## Sign the server cert using the CA
-echo " -> Signing Server Material (Root CA): server.csr..."
-openssl x509 \
-  -req \
-  -days   9999 \
-  -extfile "./hack/certgen.client.ext" \
-  -in      "./pki/server.csr" \
-  -CA      "./pki/ca.crt" \
-  -CAkey   "./pki/ca.key" \
-  -CAcreateserial \
-  -extfile "./hack/certgen.server.ext" \
-  -out "./pki/_signed.server.crt" 2>/dev/null
-
-## Verify the server material is signed
-echo " -> Verify Server Material (Root CA): server.csr..."
-openssl verify -CAfile "./pki/ca.crt" "./pki/_signed.server.crt" 1>/dev/null && echo " -> Root Verification: Success!"
-
-# Client <nova>
-. ./hack/certgen-client nova
-
-# Client <unsafe>
-. ./hack/certgen-client unsafe
-
-# Client <system>
-. ./hack/certgen-client system
-
-echo "x509 Version Numbers: "
-openssl x509 -noout -text -in "./pki/_signed.server.crt" | grep "Version"
-openssl x509 -noout -text -in "./pki/_signed.client.unsafe.crt" | grep "Version"
-echo ""
+sudo -E trust anchor --store pki/ca.crt
+sudo -E cp pki/ca.crt /etc/ca-certificates/trust-source/anchors
+sudo -E update-ca-trust
+echo "Trust updated /pki/ca.crt: Arch Linux"
