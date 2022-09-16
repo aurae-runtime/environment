@@ -32,6 +32,7 @@ subbranch   =  main
 
 default: all
 all: install
+install: aurae auraed auraectl ## Install (copy) to /bin
 
 update: ## Update rustup (nightly)
 	rustup update
@@ -48,7 +49,7 @@ pull: ## Pull all the submodules from origin main
 	cd api && git pull origin $(subbranch)
 	cd scripts && git pull origin $(subbranch)
 
-submodules: submodule ## Nobody is perfect, and git submodules are hard enough without having to remember to use the "s" or not.
+submodules: submodule ## Alias for submodule
 submodule: ## Initialize all submodules
 	@echo "Initializing submodules"
 	@echo ""
@@ -140,11 +141,6 @@ auraed: ## Initialize and compile auraed
 	cd auraed && make install
 	@echo "Success: Auraed"
 
-install: ## Install (copy) to /bin
-	cd aurae && make install
-	cd auraectl && make install
-	cd auraed && make install
-
 fmt: headers ## Format the entire code base(s)
 	@./hack/code-format
 
@@ -164,5 +160,5 @@ headers-write: ## Fix any problematic files blindly.
 	./hack/headers-write
 
 .PHONY: help
-help:  ## 🤔 Show help messages for make targets
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "[32m%-30s[0m %s", $$1, $$2}'
+help:  ## Show help messages for make targets
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(firstword $(MAKEFILE_LIST)) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}'
