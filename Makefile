@@ -28,10 +28,39 @@
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
+
 branch   ?=  main
+message  ?=  Commit from Makefile.
 default: all
 all: install
 install: aurae auraed auraectl ## Install (copy) to /bin
+
+push: ## (git) Push branch="NAME"
+	git push origin $(branch)
+	cd aurae && git push origin $(branch)
+	cd auraectl && git push origin $(branch)
+	cd auraed && git push origin $(branch)
+	cd authx && git push origin $(branch)
+	cd api && git push origin $(branch)
+	cd scripts && git push origin $(branch)
+
+add: ## (git) Add . (dangerous)
+	git add .
+	cd aurae && git add .
+	cd auraectl && git add .
+	cd auraed && git add .
+	cd authx && git add .
+	cd api && git add .
+	cd scripts && git add .
+
+commit: ## (git) Commit message="MESSAGE"
+	git commit -s -m "$(message)"
+	cd aurae && git commit -s -m "$(message)"
+	cd auraectl && git commit -s -m "$(message)"
+	cd auraed && git commit -s -m "$(message)"
+	cd authx && git commit -s -m "$(message)"
+	cd api && git commit -s -m "$(message)"
+	cd scripts && git commit -s -m "$(message)"
 
 checkout: ## (git) Checkout branch="NAME"
 	git checkout $(branch) || git checkout -b $(branch)
@@ -51,7 +80,7 @@ status: ## (git) Status
 	cd api && git status
 	cd scripts && git status
 
-pull: ## Pull all the submodules from origin main
+pull: ## (git) Pull branch="NAME"
 	git pull origin $(branch)
 	cd aurae && git pull origin $(branch)
 	cd auraectl && git pull origin $(branch)
