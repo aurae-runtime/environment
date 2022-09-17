@@ -56,6 +56,9 @@ auraed: ## Initialize and compile auraed
 	@if [ ! -d auraed ]; then printf "\n\nError:\nun 'make submodule' to download auraed source before compiling.\n\n"; exit 1; fi
 	@$(cargo) build -p auraed
 
+test: ## Run the tests
+	@$(cargo) test
+
 push: ## (git) Push branch="NAME"
 	cd aurae && git push origin $(branch)
 	#cd auraectl && git push origin $(branch)
