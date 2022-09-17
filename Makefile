@@ -84,11 +84,11 @@ status: ## (git) Status
 pull: ## (git) Pull branch="NAME"
 	git pull origin $(branch)
 	cd aurae && git pull origin $(branch)
-	#cd auraectl && git pull origin $(branch)
 	cd auraed && git pull origin $(branch)
 	cd authx && git pull origin $(branch)
 	cd api && git pull origin $(branch)
 	cd scripts && git pull origin $(branch)
+	#cd auraectl && git pull origin $(branch)
 
 submodules: submodule ## Alias for submodule
 submodule: ## Initialize all submodules
