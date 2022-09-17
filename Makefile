@@ -28,26 +28,37 @@
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
-subbranch   =  main
-
+branch   ?=  main
 default: all
 all: install
 install: aurae auraed auraectl ## Install (copy) to /bin
 
-update: ## Update rustup (nightly)
-	rustup update
+checkout: ## (git) Checkout branch="NAME"
+	git checkout $(branch) || git checkout -b $(branch)
+	cd aurae && git checkout $(branch) || git checkout -b $(branch)
+	cd auraectl && git checkout $(branch) || git checkout -b $(branch)
+	cd auraed && git checkout $(branch) || git checkout -b $(branch)
+	cd authx && git checkout $(branch) || git checkout -b $(branch)
+	cd api && git checkout $(branch) || git checkout -b $(branch)
+	cd scripts && git checkout $(branch) || git checkout -b $(branch)
 
-status: ## Wrapper for git status
+status: ## (git) Status
 	git status
+	cd aurae && git status
+	cd auraectl && git status
+	cd auraed && git status
+	cd authx && git status
+	cd api && git status
+	cd scripts && git status
 
 pull: ## Pull all the submodules from origin main
-	git pull origin $(subbranch)
-	cd aurae && git pull origin $(subbranch)
-	cd auraectl && git pull origin $(subbranch)
-	cd auraed && git pull origin $(subbranch)
-	cd authx && git pull origin $(subbranch)
-	cd api && git pull origin $(subbranch)
-	cd scripts && git pull origin $(subbranch)
+	git pull origin $(branch)
+	cd aurae && git pull origin $(branch)
+	cd auraectl && git pull origin $(branch)
+	cd auraed && git pull origin $(branch)
+	cd authx && git pull origin $(branch)
+	cd api && git pull origin $(branch)
+	cd scripts && git pull origin $(branch)
 
 submodules: submodule ## Alias for submodule
 submodule: ## Initialize all submodules
@@ -84,12 +95,12 @@ submodule: ## Initialize all submodules
 	@git submodule update --remote --rebase
 
 	# Attach to main
-	cd aurae && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
-	cd auraectl && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
-	cd auraed && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
-	cd authx && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
-	cd api && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
-	cd scripts && git checkout $(subbranch) && git branch && git pull origin $(subbranch)
+	cd aurae && git checkout $(branch) && git branch && git pull origin $(branch)
+	cd auraectl && git checkout $(branch) && git branch && git pull origin $(branch)
+	cd auraed && git checkout $(branch) && git branch && git pull origin $(branch)
+	cd authx && git checkout $(branch) && git branch && git pull origin $(branch)
+	cd api && git checkout $(branch) && git branch && git pull origin $(branch)
+	cd scripts && git checkout $(branch) && git branch && git pull origin $(branch)
 
 .PHONY: config
 config: ## Set up default config
