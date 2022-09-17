@@ -33,39 +33,40 @@ branch   ?=  main
 message  ?=  Commit from Makefile.
 default: all
 all: install
-install: aurae auraed auraectl ## Install (copy) to /bin
+install: aurae auraed ## Install (copy) to /bin
 
 push: ## (git) Push branch="NAME"
-	git push origin $(branch)
 	cd aurae && git push origin $(branch)
-	cd auraectl && git push origin $(branch)
+	#cd auraectl && git push origin $(branch)
 	cd auraed && git push origin $(branch)
 	cd authx && git push origin $(branch)
 	cd api && git push origin $(branch)
 	cd scripts && git push origin $(branch)
+	git push origin $(branch)
 
 add: ## (git) Add . (dangerous)
-	git add .
 	cd aurae && git add .
-	cd auraectl && git add .
+	#cd auraectl && git add .
 	cd auraed && git add .
 	cd authx && git add .
 	cd api && git add .
 	cd scripts && git add .
+	git add .
 
 commit: ## (git) Commit message="MESSAGE"
-	git commit -s -m "$(message)"
-	cd aurae && git commit -s -m "$(message)"
-	cd auraectl && git commit -s -m "$(message)"
-	cd auraed && git commit -s -m "$(message)"
-	cd authx && git commit -s -m "$(message)"
-	cd api && git commit -s -m "$(message)"
-	cd scripts && git commit -s -m "$(message)"
+	cd aurae && git commit -s -m "$(message)" || true
+	#cd auraectl && git commit -s -m "$(message)" || true
+	cd auraed && git commit -s -m "$(message)" || true
+	cd authx && git commit -s -m "$(message)" || true
+	cd api && git commit -s -m "$(message)" || true
+	cd scripts && git commit -s -m "$(message)" || true
+	git add .
+	git commit -s -m "$(message)" || true
 
 checkout: ## (git) Checkout branch="NAME"
 	git checkout $(branch) || git checkout -b $(branch)
 	cd aurae && git checkout $(branch) || git checkout -b $(branch)
-	cd auraectl && git checkout $(branch) || git checkout -b $(branch)
+	#cd auraectl && git checkout $(branch) || git checkout -b $(branch)
 	cd auraed && git checkout $(branch) || git checkout -b $(branch)
 	cd authx && git checkout $(branch) || git checkout -b $(branch)
 	cd api && git checkout $(branch) || git checkout -b $(branch)
@@ -74,7 +75,7 @@ checkout: ## (git) Checkout branch="NAME"
 status: ## (git) Status
 	git status
 	cd aurae && git status
-	cd auraectl && git status
+	#cd auraectl && git status
 	cd auraed && git status
 	cd authx && git status
 	cd api && git status
@@ -83,7 +84,7 @@ status: ## (git) Status
 pull: ## (git) Pull branch="NAME"
 	git pull origin $(branch)
 	cd aurae && git pull origin $(branch)
-	cd auraectl && git pull origin $(branch)
+	#cd auraectl && git pull origin $(branch)
 	cd auraed && git pull origin $(branch)
 	cd authx && git pull origin $(branch)
 	cd api && git pull origin $(branch)
@@ -100,8 +101,8 @@ submodule: ## Initialize all submodules
 	@if [ -d aurae ]; then mv -v aurae /tmp/aurae; fi
 
 	# Auraectl
-	@if [ -d /tmp/auraectl ]; then rm -rvf /tmp/auraectl; fi
-	@if [ -d auraectl ]; then mv -v auraectl /tmp/auraectl; fi
+	#@if [ -d /tmp/auraectl ]; then rm -rvf /tmp/auraectl; fi
+	#@if [ -d auraectl ]; then mv -v auraectl /tmp/auraectl; fi
 
 	# Auraed
 	@if [ -d /tmp/auraed ]; then rm -rvf /tmp/auraed; fi
@@ -125,7 +126,7 @@ submodule: ## Initialize all submodules
 
 	# Attach to main
 	cd aurae && git checkout $(branch) && git branch && git pull origin $(branch)
-	cd auraectl && git checkout $(branch) && git branch && git pull origin $(branch)
+	#cd auraectl && git checkout $(branch) && git branch && git pull origin $(branch)
 	cd auraed && git checkout $(branch) && git branch && git pull origin $(branch)
 	cd authx && git checkout $(branch) && git branch && git pull origin $(branch)
 	cd api && git checkout $(branch) && git branch && git pull origin $(branch)
@@ -156,9 +157,6 @@ certs2: ## Alias for certs use cfssl
 clean-certs: ## Clean the cert material
 	@rm -rvf pki/*
 
-arch: ## Install certs for Archlinux
-	./hack/certgen.import.ca.arch
-
 key: keygen ## Alias for keygen
 keygen: ## Generate an SSH key for aurae: id_aurae
 	ssh-keygen -t ed25519 -a 1337 -f $(HOME)/.ssh/id_aurae
@@ -169,11 +167,11 @@ aurae: ## Initialize and compile aurae
 	cd aurae && make install
 	@echo "Success: Aurae"
 
-.PHONY: auraectl
-auraectl: ## Initialize and compile auraectl
-	@if [ ! -d auraectl ]; then printf "\n\nError: Missing submodules. Run 'make submodule' to download aurae source before compiling.\n\n"; exit 1; fi
-	cd auraectl && make install
-	@echo "Success: Auraectl"
+#.PHONY: auraectl
+#auraectl: ## Initialize and compile auraectl
+#	@if [ ! -d auraectl ]; then printf "\n\nError: Missing submodules. Run 'make submodule' to download aurae source before compiling.\n\n"; exit 1; fi
+#	cd auraectl && make install
+#	@echo "Success: Auraectl"
 
 .PHONY: auraed
 auraed: ## Initialize and compile auraed
@@ -187,7 +185,7 @@ fmt: headers ## Format the entire code base(s)
 .PHONY: clean
 clean: clean-certs
 	cd aurae && make clean
-	cd auraectl && make clean
+	#cd auraectl && make clean
 	cd auraed && make clean
 	@rm -rvf target/*
 
