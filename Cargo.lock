@@ -101,7 +101,6 @@ dependencies = [
  "multi_log",
  "prost",
  "rustls",
- "rustls-pemfile",
  "simplelog",
  "syslog",
  "tokio",
