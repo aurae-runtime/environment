@@ -49,12 +49,12 @@ release: ## Build and install (release) 🎉
 .PHONY: aurae
 aurae: ## Initialize and compile aurae
 	@if [ ! -d aurae ]; then printf "\n\nError: Missing submodules. Run 'make submodule' to download aurae source before compiling.\n\n"; exit 1; fi
-	@$(cargo) build -p aurae
+	@$(cargo) install --path ./aurae --debug
 
 .PHONY: auraed
 auraed: ## Initialize and compile auraed
 	@if [ ! -d auraed ]; then printf "\n\nError:\nun 'make submodule' to download auraed source before compiling.\n\n"; exit 1; fi
-	@$(cargo) build -p auraed
+	@$(cargo) install --path ./aurae --debug
 
 test: ## Run the tests
 	@$(cargo) test
