@@ -78,6 +78,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "home",
+ "prost",
  "rhai",
  "serde",
  "tokio",
@@ -101,7 +102,6 @@ dependencies = [
  "multi_log",
  "prost",
  "rustls",
- "rustls-pemfile",
  "simplelog",
  "syslog",
  "tokio",
