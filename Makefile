@@ -54,7 +54,7 @@ aurae: ## Initialize and compile aurae
 .PHONY: auraed
 auraed: ## Initialize and compile auraed
 	@if [ ! -d auraed ]; then printf "\n\nError:\nun 'make submodule' to download auraed source before compiling.\n\n"; exit 1; fi
-	@$(cargo) install --path ./aurae --debug
+	@$(cargo) install --path ./auraed --debug
 
 test: ## Run the tests
 	@$(cargo) test
