@@ -49,30 +49,26 @@ release: ## Build and install (release) 🎉
 .PHONY: aurae
 aurae: ## Initialize and compile aurae
 	@if [ ! -d aurae ]; then printf "\n\nError: Missing submodules. Run 'make submodule' to download aurae source before compiling.\n\n"; exit 1; fi
-	@$(cargo) build -p aurae
+	@$(cargo) install --path ./aurae --debug
 
 .PHONY: auraed
 auraed: ## Initialize and compile auraed
 	@if [ ! -d auraed ]; then printf "\n\nError:\nun 'make submodule' to download auraed source before compiling.\n\n"; exit 1; fi
-	@$(cargo) build -p auraed
+	@$(cargo) install --path ./auraed --debug
 
 test: ## Run the tests
 	@$(cargo) test
 
 push: ## (git) Push branch="NAME"
 	cd aurae && git push origin $(branch)
-	#cd auraectl && git push origin $(branch)
 	cd auraed && git push origin $(branch)
-	#cd authx && git push origin $(branch)
 	cd api && git push origin $(branch)
 	cd scripts && git push origin $(branch)
 	git push origin $(branch)
 
 add: ## (git) Add . (dangerous)
 	cd aurae && git add .
-	#cd auraectl && git add .
 	cd auraed && git add .
-	#cd authx && git add .
 	cd api && git add .
 	cd scripts && git add .
 	git add .
@@ -90,18 +86,14 @@ commit: ## (git) Commit message="MESSAGE"
 checkout: ## (git) Checkout branch="NAME"
 	git checkout $(branch) || git checkout -b $(branch)
 	cd aurae && git checkout $(branch) || git checkout -b $(branch)
-	#cd auraectl && git checkout $(branch) || git checkout -b $(branch)
 	cd auraed && git checkout $(branch) || git checkout -b $(branch)
-	#cd authx && git checkout $(branch) || git checkout -b $(branch)
 	cd api && git checkout $(branch) || git checkout -b $(branch)
 	cd scripts && git checkout $(branch) || git checkout -b $(branch)
 
 status: ## (git) Status
 	git status
 	cd aurae && git status
-	#cd auraectl && git status
 	cd auraed && git status
-	#cd authx && git status
 	cd api && git status
 	cd scripts && git status
 
@@ -109,10 +101,8 @@ pull: ## (git) Pull branch="NAME"
 	git pull origin $(branch)
 	cd aurae && git pull origin $(branch)
 	cd auraed && git pull origin $(branch)
-	#cd authx && git pull origin $(branch)
 	cd api && git pull origin $(branch)
 	cd scripts && git pull origin $(branch)
-	#cd auraectl && git pull origin $(branch)
 
 submodules: submodule ## Alias for submodule
 submodule: ## Initialize all submodules
@@ -131,10 +121,6 @@ submodule: ## Initialize all submodules
 	# Auraed
 	@if [ -d /tmp/auraed ]; then rm -rvf /tmp/auraed; fi
 	@if [ -d auraed ]; then mv -v auraed /tmp/auraed; fi
-
-	# Authx
-	#@if [ -d /tmp/authx ]; then rm -rvf /tmp/authx; fi
-	#@if [ -d authx ]; then mv -v authx /tmp/authx; fi
 
 	# API
 	@if [ -d /tmp/api ]; then rm -rvf /tmp/api; fi
@@ -155,12 +141,6 @@ submodule: ## Initialize all submodules
 	#cd authx && git checkout $(branch) && git branch && git pull origin $(branch)
 	cd api && git checkout $(branch) && git branch && git pull origin $(branch)
 	cd scripts && git checkout $(branch) && git branch && git pull origin $(branch)
-
-#.PHONY: auraectl
-#auraectl: ## Initialize and compile auraectl
-#	@if [ ! -d auraectl ]; then printf "\n\nError: Missing submodules. Run 'make submodule' to download aurae source before compiling.\n\n"; exit 1; fi
-#	cd auraectl && make install
-#	@echo "Success: Auraectl"
 
 .PHONY: config
 config: ## Set up default config
