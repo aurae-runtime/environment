@@ -2,6 +2,6 @@
 
 members = [
     "aurae",
-    "aurae/output_macros",
+    "aurae/macros",
     "auraed",
 ]
