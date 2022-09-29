@@ -61,6 +61,8 @@ auraed: ## Initialize and compile auraed
 test: ## Run the tests
 	@$(cargo) test
 
+export GIT_PAGER = cat
+
 push: ## (git) Push branch="NAME"
 	cd aurae && git push origin $(branch)
 	cd auraed && git push origin $(branch)
