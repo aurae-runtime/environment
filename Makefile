@@ -33,14 +33,14 @@ branch       ?=  main
 message      ?=  Default commit message. Aurae Runtime environment.
 cargo         =  cargo
 
-default: compile install
-all: compile install
+default: install
+all: install ## Compile for the local architecture ⚙
 
-compile: aurae auraed ## Compile for the local architecture ⚙
+compile: ## Compile in subsequent directories
+	@cd aurae && make compile
+	@cd auraed && make compile
 
-install: ## Build and install (debug) 🎉
-	@$(cargo) install --path ./aurae --debug
-	@$(cargo) install --path ./auraed --debug
+install: aurae auraed ## Build and install (debug) 🎉
 
 release: ## Build and install (release) 🎉
 	@$(cargo) install --path ./aurae
