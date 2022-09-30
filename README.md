@@ -18,22 +18,11 @@ and then compiling the project using the `rust` programming language.
 
 ### Dependencies
 
-The Aurae environment depends on the `protoc` protocol buffer compiler being 
-available within the path.
-
-Install `protoc` using your operating system's package manager (Or from source
-if you want to :) )
-
-If you are running Ubuntu you can simply run the following,
-
+The Aurae environment depends on the `protoc` protocol buffer compiler being available within the path. 
+Install `protoc` using your operating system's package manager (Or from source if you want to :) )
+If you are running Ubuntu you can run the following,
 ```bash
 sudo apt install -y protobuf-compiler
-```
-
-And then create the required directories,
-
-```bash
-make directories
 ```
 
 ### Aurae Components

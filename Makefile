@@ -186,10 +186,6 @@ headers-check: ## Only check for problematic files.
 headers-write: ## Fix any problematic files blindly.
 	./hack/headers-write
 
-.PHONY: directories
-directories:
-	sudo mkdir -p /var/run/aurae
-
 .PHONY: start
 start:
 	sudo $(HOME)/.cargo/bin/auraed
