@@ -2,5 +2,6 @@
 
 members = [
     "aurae",
+    "aurae/macros",
     "auraed",
 ]
