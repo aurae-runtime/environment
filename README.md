@@ -33,7 +33,7 @@ sudo apt install -y protobuf-compiler
 And then create the required directories,
 
 ```bash
-make socket
+make directories
 ```
 
 ### Aurae Components
