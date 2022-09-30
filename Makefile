@@ -165,7 +165,6 @@ certs: clean-certs ## Generate x509 mTLS certs in /pki directory
 	sudo -E cp -v pki/* /etc/aurae/pki
 	@echo "Install PKI Auth Material [/etc/aurae]"
 
-
 clean-certs: ## Clean the cert material
 	@rm -rvf pki/*
 
@@ -187,6 +186,15 @@ headers-check: ## Only check for problematic files.
 headers-write: ## Fix any problematic files blindly.
 	./hack/headers-write
 
+.PHONY: directories
+directories:
+	sudo mkdir -p /var/run/aurae
+
+.PHONY: start
+start:
+	sudo $(HOME)/.cargo/bin/auraed
+
 .PHONY: help
 help:  ## Show help messages for make targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(firstword $(MAKEFILE_LIST)) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}'
+
