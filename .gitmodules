@@ -5,12 +5,12 @@
 [submodule "api"]
 	path = api
 	url = git@github.com:aurae-runtime/api.git
-[submodule "scripts"]
-	path = scripts
-	url = git@github.com:aurae-runtime/scripts.git
 [submodule "authx"]
 	path = authx
 	url = git@github.com:aurae-runtime/authx.git
 [submodule "auraectl"]
 	path = auraectl
 	url = git@github.com:wesen/auraectl
+[submodule "auraescript"]
+	path = auraescript
+	url = git@github.com:aurae-runtime/auraescript.git
