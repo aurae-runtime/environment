@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "aurae",
-    "aurae/macros",
+    "auraescript",
+    "auraescript/macros",
     "auraed",
 ]
