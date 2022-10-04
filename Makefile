@@ -36,21 +36,21 @@ cargo         =  cargo
 default: compile install
 all: compile install
 
-compile: aurae auraed ## Compile for the local architecture ⚙
+compile: auraescript auraed ## Compile for the local architecture ⚙
 
 install: ## Build and install (debug) 🎉
-	@$(cargo) install --path ./aurae --debug
+	@$(cargo) install --path ./auraescript --debug
 	@$(cargo) install --path ./auraed --debug
 
 release: ## Build and install (release) 🎉
-	@$(cargo) install --path ./aurae
+	@$(cargo) install --path ./auraescript
 	@$(cargo) install --path ./auraed
 
-.PHONY: aurae
-aurae: ## Initialize and compile aurae
-	@if [ ! -d aurae ]; then printf "\n\nError: Missing submodules. Run 'make submodule' to download aurae source before compiling.\n\n"; exit 1; fi
-	@$(cargo) clippy -p aurae
-	@$(cargo) install --path ./aurae --debug
+.PHONY: auraescript
+auraescript: ## Initialize and compile aurae
+	@if [ ! -d auraescript ]; then printf "\n\nError: Missing submodules. Run 'make submodule' to download aurae source before compiling.\n\n"; exit 1; fi
+	@$(cargo) clippy -p auraescript
+	@$(cargo) install --path ./auraescript --debug
 
 .PHONY: auraed
 auraed: ## Initialize and compile auraed
@@ -64,49 +64,41 @@ test: ## Run the tests
 export GIT_PAGER = cat
 
 push: ## (git) Push branch="NAME"
-	cd aurae && git push origin $(branch)
+	cd auraescript && git push origin $(branch)
 	cd auraed && git push origin $(branch)
 	cd api && git push origin $(branch)
-	cd scripts && git push origin $(branch)
 	git push origin $(branch)
 
 add: ## (git) Add . (dangerous)
-	cd aurae && git add .
+	cd auraescript && git add .
 	cd auraed && git add .
 	cd api && git add .
-	cd scripts && git add .
 	git add .
 
 commit: ## (git) Commit message="MESSAGE"
-	cd aurae && git commit -s -m "$(message)" || true
-	#cd auraectl && git commit -s -m "$(message)" || true
+	cd auraescript && git commit -s -m "$(message)" || true
 	cd auraed && git commit -s -m "$(message)" || true
-	#cd authx && git commit -s -m "$(message)" || true
 	cd api && git commit -s -m "$(message)" || true
-	cd scripts && git commit -s -m "$(message)" || true
 	git add .
 	git commit -s -m "$(message)" || true
 
 checkout: ## (git) Checkout branch="NAME"
 	git checkout $(branch) || git checkout -b $(branch)
-	cd aurae && git checkout $(branch) || git checkout -b $(branch)
+	cd auraescript && git checkout $(branch) || git checkout -b $(branch)
 	cd auraed && git checkout $(branch) || git checkout -b $(branch)
 	cd api && git checkout $(branch) || git checkout -b $(branch)
-	cd scripts && git checkout $(branch) || git checkout -b $(branch)
 
 status: ## (git) Status
 	git status
-	cd aurae && git status
+	cd auraescript && git status
 	cd auraed && git status
 	cd api && git status
-	cd scripts && git status
 
 pull: ## (git) Pull branch="NAME"
 	git pull origin $(branch)
-	cd aurae && git pull origin $(branch)
+	cd auraescript && git pull origin $(branch)
 	cd auraed && git pull origin $(branch)
 	cd api && git pull origin $(branch)
-	cd scripts && git pull origin $(branch)
 
 submodules: submodule ## Alias for submodule
 submodule: ## Initialize all submodules
@@ -114,13 +106,9 @@ submodule: ## Initialize all submodules
 	@echo ""
 	@read -p "Warning: This will destroy all work in subdirectories! Press any key to continue." FOO
 
-	# Aurae
-	@if [ -d /tmp/aurae ]; then rm -rvf /tmp/aurae; fi
-	@if [ -d aurae ]; then mv -v aurae /tmp/aurae; fi
-
-	# Auraectl
-	#@if [ -d /tmp/auraectl ]; then rm -rvf /tmp/auraectl; fi
-	#@if [ -d auraectl ]; then mv -v auraectl /tmp/auraectl; fi
+	# AuraeScript
+	@if [ -d /tmp/auraescript ]; then rm -rvf /tmp/auraescript; fi
+	@if [ -d auraescript ]; then mv -v auraescript /tmp/auraescript; fi
 
 	# Auraed
 	@if [ -d /tmp/auraed ]; then rm -rvf /tmp/auraed; fi
@@ -130,21 +118,14 @@ submodule: ## Initialize all submodules
 	@if [ -d /tmp/api ]; then rm -rvf /tmp/api; fi
 	@if [ -d api ]; then mv -v api /tmp/api; fi
 
-	# Scripts
-	@if [ -d /tmp/scripts ]; then rm -rvf /tmp/scripts; fi
-	@if [ -d scripts ]; then mv -v scripts /tmp/scripts; fi
-
 	# Init and update
 	@git submodule update --init --recursive
 	@git submodule update --remote --rebase
 
 	# Attach to main
-	cd aurae && git checkout $(branch) && git branch && git pull origin $(branch)
-	#cd auraectl && git checkout $(branch) && git branch && git pull origin $(branch)
+	cd auraescript && git checkout $(branch) && git branch && git pull origin $(branch)
 	cd auraed && git checkout $(branch) && git branch && git pull origin $(branch)
-	#cd authx && git checkout $(branch) && git branch && git pull origin $(branch)
 	cd api && git checkout $(branch) && git branch && git pull origin $(branch)
-	cd scripts && git checkout $(branch) && git branch && git pull origin $(branch)
 
 .PHONY: config
 config: ## Set up default config
