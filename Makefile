@@ -66,19 +66,16 @@ export GIT_PAGER = cat
 push: ## (git) Push branch="NAME"
 	cd auraescript && git push origin $(branch)
 	cd auraed && git push origin $(branch)
-	cd api && git push origin $(branch)
 	git push origin $(branch)
 
 add: ## (git) Add . (dangerous)
 	cd auraescript && git add .
 	cd auraed && git add .
-	cd api && git add .
 	git add .
 
 commit: ## (git) Commit message="MESSAGE"
 	cd auraescript && git commit -s -m "$(message)" || true
 	cd auraed && git commit -s -m "$(message)" || true
-	cd api && git commit -s -m "$(message)" || true
 	git add .
 	git commit -s -m "$(message)" || true
 
@@ -86,19 +83,16 @@ checkout: ## (git) Checkout branch="NAME"
 	git checkout $(branch) || git checkout -b $(branch)
 	cd auraescript && git checkout $(branch) || git checkout -b $(branch)
 	cd auraed && git checkout $(branch) || git checkout -b $(branch)
-	cd api && git checkout $(branch) || git checkout -b $(branch)
 
 status: ## (git) Status
 	git status
 	cd auraescript && git status
 	cd auraed && git status
-	cd api && git status
 
 pull: ## (git) Pull branch="NAME"
 	git pull origin $(branch)
 	cd auraescript && git pull origin $(branch)
 	cd auraed && git pull origin $(branch)
-	cd api && git pull origin $(branch)
 
 submodules: submodule ## Alias for submodule
 submodule: ## Initialize all submodules
@@ -114,10 +108,6 @@ submodule: ## Initialize all submodules
 	@if [ -d /tmp/auraed ]; then rm -rvf /tmp/auraed; fi
 	@if [ -d auraed ]; then mv -v auraed /tmp/auraed; fi
 
-	# API
-	@if [ -d /tmp/api ]; then rm -rvf /tmp/api; fi
-	@if [ -d api ]; then mv -v api /tmp/api; fi
-
 	# Init and update
 	@git submodule update --init --recursive
 	@git submodule update --remote --rebase
@@ -125,7 +115,6 @@ submodule: ## Initialize all submodules
 	# Attach to main
 	cd auraescript && git checkout $(branch) && git branch && git pull origin $(branch)
 	cd auraed && git checkout $(branch) && git branch && git pull origin $(branch)
-	cd api && git checkout $(branch) && git branch && git pull origin $(branch)
 
 .PHONY: config
 config: ## Set up default config
