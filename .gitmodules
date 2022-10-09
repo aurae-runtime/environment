@@ -2,9 +2,6 @@
 	path = auraed
 	url = git@github.com:aurae-runtime/auraed
 	branch = main
-[submodule "api"]
-	path = api
-	url = git@github.com:aurae-runtime/api.git
 [submodule "authx"]
 	path = authx
 	url = git@github.com:aurae-runtime/authx.git
