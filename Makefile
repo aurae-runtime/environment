@@ -119,7 +119,7 @@ submodule: ## Initialize all submodules
 .PHONY: config
 config: ## Set up default config
 	@mkdir -p $(HOME)/.aurae
-	@cp -v aurae/default.config.toml $(HOME)/.aurae/config
+	@cp -v auraescript/default.config.toml $(HOME)/.aurae/config
 	@sed -i 's|~|$(HOME)|g' $(HOME)/.aurae/config
 	@mkdir -p $(HOME)/.aurae/pki
 	@cp -v pki/* $(HOME)/.aurae/pki

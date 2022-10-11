@@ -5,9 +5,12 @@
 [submodule "authx"]
 	path = authx
 	url = git@github.com:aurae-runtime/authx.git
+	branch = main
 [submodule "auraectl"]
 	path = auraectl
 	url = git@github.com:wesen/auraectl
+	branch = main
 [submodule "auraescript"]
 	path = auraescript
 	url = git@github.com:aurae-runtime/auraescript.git
+	branch = main
