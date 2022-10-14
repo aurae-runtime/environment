@@ -28,10 +28,13 @@
 #                                                                              #
 # ---------------------------------------------------------------------------- #
 
-
+# Variables and Settings
 branch       ?=  main
 message      ?=  Default commit message. Aurae Runtime environment.
 cargo         =  cargo
+
+# Configuration Options
+export GIT_PAGER = cat
 
 default: compile install
 all: compile install
@@ -61,16 +64,16 @@ auraed: ## Initialize and compile auraed
 test: ## Run the tests
 	@$(cargo) test
 
-export GIT_PAGER = cat
-
 push: ## (git) Push branch="NAME"
 	cd auraescript && git push origin $(branch)
 	cd auraed && git push origin $(branch)
+	cd website && git push origin $(branch)
 	git push origin $(branch)
 
 add: ## (git) Add . (dangerous)
 	cd auraescript && git add .
 	cd auraed && git add .
+	cd website && git add .
 	git add .
 
 commit: ## (git) Commit message="MESSAGE"
@@ -83,16 +86,19 @@ checkout: ## (git) Checkout branch="NAME"
 	git checkout $(branch) || git checkout -b $(branch)
 	cd auraescript && git checkout $(branch) || git checkout -b $(branch)
 	cd auraed && git checkout $(branch) || git checkout -b $(branch)
+	cd website && git status
 
 status: ## (git) Status
 	git status
 	cd auraescript && git status
 	cd auraed && git status
+	cd website && git status
 
 pull: ## (git) Pull branch="NAME"
 	git pull origin $(branch)
 	cd auraescript && git pull origin $(branch)
 	cd auraed && git pull origin $(branch)
+	cd website && git pull origin $(branch)
 
 submodules: submodule ## Alias for submodule
 submodule: ## Initialize all submodules
@@ -108,6 +114,10 @@ submodule: ## Initialize all submodules
 	@if [ -d /tmp/auraed ]; then rm -rvf /tmp/auraed; fi
 	@if [ -d auraed ]; then mv -v auraed /tmp/auraed; fi
 
+	# Website
+	@if [ -d /tmp/website ]; then rm -rvf /tmp/website; fi
+	@if [ -d website ]; then mv -v website /tmp/website; fi
+
 	# Init and update
 	@git submodule update --init --recursive
 	@git submodule update --remote --rebase
@@ -115,6 +125,8 @@ submodule: ## Initialize all submodules
 	# Attach to main
 	cd auraescript && git checkout $(branch) && git branch && git pull origin $(branch)
 	cd auraed && git checkout $(branch) && git branch && git pull origin $(branch)
+	cd website && git checkout $(branch) && git branch && git pull origin $(branch)
+
 
 .PHONY: config
 config: ## Set up default config
