@@ -64,7 +64,9 @@ auraed: ## Initialize and compile auraed
 .PHONY: website
 website: ## Assemble all the /docs for the website locally.
 	@if [ ! -d auraed ]; then printf "\n\nError:\nun 'make submodule' to download auraed source before compiling.\n\n"; exit 1; fi
+	cp -rv docs/* website/docs
 	cp -rv auraed/docs/* website/docs/auraed
+	cp -rv auraescript/docs/* website/docs/auraed
 
 test: ## Run the tests
 	@$(cargo) test
