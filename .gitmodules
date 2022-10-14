@@ -10,3 +10,7 @@
         path = website
         url = git@github.com:aurae-runtime/aurae.io.git
         branch = main
+[submodule "community"]
+        path = community
+        url = git@github.com:aurae-runtime/community.git
+        branch = main
