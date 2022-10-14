@@ -75,17 +75,21 @@ push: ## (git) Push branch="NAME"
 	cd auraescript && git push origin $(branch)
 	cd auraed && git push origin $(branch)
 	cd website && git push origin $(branch)
+	cd community && git push origin $(branch)
 	git push origin $(branch)
 
 add: ## (git) Add . (dangerous)
 	cd auraescript && git add .
 	cd auraed && git add .
 	cd website && git add .
+	cd community && git add .
 	git add .
 
 commit: ## (git) Commit message="MESSAGE"
 	cd auraescript && git commit -s -m "$(message)" || true
 	cd auraed && git commit -s -m "$(message)" || true
+	cd website && git commit -s -m "$(message)" || true
+	cd community && git commit -s -m "$(message)" || true
 	git add .
 	git commit -s -m "$(message)" || true
 
@@ -93,19 +97,22 @@ checkout: ## (git) Checkout branch="NAME"
 	git checkout $(branch) || git checkout -b $(branch)
 	cd auraescript && git checkout $(branch) || git checkout -b $(branch)
 	cd auraed && git checkout $(branch) || git checkout -b $(branch)
-	cd website && git status
+	cd website && git checkout $(branch) || git checkout -b $(branch)
+	cd website && git checkout $(branch) || git checkout -b $(branch)
 
 status: ## (git) Status
 	git status
 	cd auraescript && git status
 	cd auraed && git status
 	cd website && git status
+	cd community && git status
 
 pull: ## (git) Pull branch="NAME"
 	git pull origin $(branch)
 	cd auraescript && git pull origin $(branch)
 	cd auraed && git pull origin $(branch)
 	cd website && git pull origin $(branch)
+	cd community && git pull origin $(branch)
 
 submodules: submodule ## Alias for submodule
 submodule: ## Initialize all submodules
@@ -125,6 +132,10 @@ submodule: ## Initialize all submodules
 	@if [ -d /tmp/website ]; then rm -rvf /tmp/website; fi
 	@if [ -d website ]; then mv -v website /tmp/website; fi
 
+	# Community
+	@if [ -d /tmp/community ]; then rm -rvf /tmp/community; fi
+	@if [ -d community ]; then mv -v community /tmp/community; fi
+
 	# Init and update
 	@git submodule update --init --recursive
 	@git submodule update --remote --rebase
@@ -133,7 +144,7 @@ submodule: ## Initialize all submodules
 	cd auraescript && git checkout $(branch) && git branch && git pull origin $(branch)
 	cd auraed && git checkout $(branch) && git branch && git pull origin $(branch)
 	cd website && git checkout $(branch) && git branch && git pull origin $(branch)
-
+	cd community && git checkout $(branch) && git branch && git pull origin $(branch)
 
 .PHONY: config
 config: ## Set up default config
