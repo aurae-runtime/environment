@@ -66,8 +66,19 @@ website: ## Assemble all the /docs for the website locally.
 	@if [ ! -d auraed ]; then printf "\n\nError:\nun 'make submodule' to download auraed source before compiling.\n\n"; exit 1; fi
 	cp -rv README.md website/docs/index.md # Special copy for the main README
 	cp -rv docs/* website/docs
+
+	# Auraed
 	cp -rv auraed/docs/* website/docs/auraed
-	cp -rv auraescript/docs/* website/docs/auraed
+	cp -rv auraed/README.md website/docs/auraed/index.md # Special copy for the main README
+
+	# AuraeScript
+	cp -rv auraescript/docs/* website/docs/auraescript
+	cp -rv auraescript/README.md website/docs/auraescript/index.md # Special copy for the main README
+
+	# Standard Library
+	cp -rv auraed/stdlib/v0/docs/* website/docs/stdlib/v0
+	cp -rv auraed/stdlib/README.md website/docs/stdlib/index.md # Special copy for the main README
+
 
 .PHONY: docs
 docs: ## Run the documentation site locally on port 8000.
