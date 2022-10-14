@@ -39,7 +39,7 @@ make pki config # Generate certs and a default aurae config
 make            # Compile and install aurae and auraed
 ```
 
-NOte that if you would like to do all of the above commands in one go you can also
+Note that if you would like to do all of the above commands in one go you can also
 run,
 ```bash 
 make all
