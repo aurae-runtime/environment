@@ -1,6 +1,4 @@
-# Aurae Installer and Builder Environment 
-
-Distributed Operating Environment (DOPE)
+# Aurae
 
 High level environment management for the Aurae runtime suite.
 
