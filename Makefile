@@ -77,6 +77,7 @@ website: ## Assemble all the /docs for the website locally.
 
 	# Standard Library
 	cp -rv auraed/stdlib/v0/docs/* website/docs/stdlib/v0
+	cp -rv auraed/stdlib/v0/README.md website/docs/stdlib/v0/index.md
 	cp -rv auraed/stdlib/README.md website/docs/stdlib/index.md # Special copy for the main README
 
 
