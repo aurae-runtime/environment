@@ -115,7 +115,7 @@ checkout: ## (git) Checkout branch="NAME"
 	cd auraescript && git checkout $(branch) || git checkout -b $(branch)
 	cd auraed && git checkout $(branch) || git checkout -b $(branch)
 	cd website && git checkout $(branch) || git checkout -b $(branch)
-	cd website && git checkout $(branch) || git checkout -b $(branch)
+	cd community && git checkout $(branch) || git checkout -b $(branch)
 
 status: ## (git) Status
 	git status
